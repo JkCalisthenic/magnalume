@@ -16,11 +16,11 @@ The owner told us not to ask anything, so the interview and decision page were s
 THESIS: A mineral fluorescence room, not a neon product hero. Specimens wait in blackout until you switch the lamp.
 OWN-WORLD: Blackout ground, violet only as light, lime only as emission plus one action. Bone specimen labels that turn optical-blue under UV. One white-or-UV rocker switch governs the page. One lime drenched field. Archivo italic expanded.
 STORY: You hold the lamp, chalk appears, you understand the product, you ask for the first batch.
-FIRST VIEWPORT: Full-bleed generated night photo, athlete clapping overhead in a chalk cloud, relit UV, with a live WebGL cloud at the hands. Left, huge headline and CTA. Specimen label bottom right. Click claps.
+FIRST VIEWPORT: Full-bleed composed night photo, relit UV: an athlete's clapped hands and a chalked bar glow, a second athlete holds a front lever on the bar. Left, huge headline and CTA. Specimen label bottom right.
 FORM: Fourth of seven grounded candidates, seed ef3f4b0c. Raises: emission-line rail, colour only as emission; Saul Bass, one total field; brick instructions, few words per step.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-Signature interaction: the cursor is the lamp, a click claps a chalk cloud from the hands, and the rocker strikes the room to white light with a fluorescent flicker.
+Signature interaction: the cursor is the lamp on the WebGL stages and the jar, the rocker strikes the room to white light, and the route tells its copy line by line with the scroll.
 
 ## Unresolved
 

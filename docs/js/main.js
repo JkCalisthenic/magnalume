@@ -3,7 +3,6 @@ import { paintRoute, paintBar, paintPrint } from './marks.js';
 
 const root = document.documentElement;
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const touch = matchMedia('(pointer: coarse)').matches;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -286,7 +285,6 @@ function initForm() {
 }
 
 function initCopy() {
-  $$('[data-touch]').forEach(el => { if (touch) el.textContent = el.dataset.touch; });
   const title = document.title;
   document.addEventListener('visibilitychange', () => {
     document.title = document.hidden ? 'Se ha ido la luz…' : title;

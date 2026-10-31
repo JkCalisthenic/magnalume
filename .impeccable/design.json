@@ -1,13 +1,13 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-31T21:30:15Z",
+  "generatedAt": "2026-10-31T22:17:16Z",
   "title": "Design System: Magnalume",
   "extensions": {
     "colorMeta": {
       "emission-lime": {
         "role": "primary",
         "displayName": "Emission Lime",
-        "canonical": "var(--lime) #9dff12; in shaders LIME vec3(.6, 1., .07), cloud tint vec3(.62, 1., .1)",
+        "canonical": "var(--lime) #9dff12; in shaders LIME vec3(.6, 1., .07); also --focus at --white 0",
         "tonalRamp": [
           "#050f00",
           "#172c00",
@@ -112,7 +112,7 @@
       "ink": {
         "role": "neutral",
         "displayName": "Ink",
-        "canonical": "--fg at --white 1: color-mix(in srgb, #eceadf, #121214 var(--mix))",
+        "canonical": "--fg at --white 1: color-mix(in srgb, #eceadf, #121214 var(--mix)); also --focus at --white 1",
         "tonalRamp": [
           "#0b0b0d",
           "#252527",
@@ -189,14 +189,14 @@
         "displayName": "Line (UV)",
         "canonical": "--line at --white 0",
         "tonalRamp": [
-          "#0a0b11",
-          "#24242c",
-          "#404149",
-          "#5f6169",
-          "#80828a",
-          "#a3a4ad",
-          "#c7c8d2",
-          "#eceef7"
+          "#0a0a12",
+          "#22232c",
+          "#3e3f49",
+          "#5e5f6a",
+          "#7e7f8a",
+          "#a2a4af",
+          "#c8c9d6",
+          "#ecedfa"
         ]
       },
       "line-white": {
@@ -204,14 +204,14 @@
         "displayName": "Line (white)",
         "canonical": "--line at --white 1",
         "tonalRamp": [
-          "#0b0b0f",
-          "#24242a",
-          "#414147",
+          "#0b0a10",
+          "#23232a",
+          "#3f3f46",
           "#606067",
-          "#818188",
-          "#a4a4ab",
-          "#c8c8d0",
-          "#eeeef5"
+          "#7f7f87",
+          "#a4a4ac",
+          "#c9c9d2",
+          "#ededf7"
         ]
       },
       "paper-uv": {
@@ -389,9 +389,21 @@
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Section statements; stages with narrower copy cap it between 3.6rem and 3.9rem.",
+        "purpose": "Section statements; the product heading caps at 3.75rem and the closing heading at 3.9rem.",
         "fontStyle": "italic",
         "fontStretch": "125%"
+      },
+      "headline-route": {
+        "displayName": "Headline, route",
+        "purpose": "The two headings on the pinned wall, each alone on the stage.",
+        "fontStyle": "italic",
+        "fontStretch": "125%"
+      },
+      "route-line": {
+        "displayName": "Route Line",
+        "purpose": "Sentences travelling over the pinned wall; held to 21ch.",
+        "fontStyle": "italic",
+        "fontStretch": "112%"
       },
       "title": {
         "displayName": "Title",
@@ -413,7 +425,7 @@
       },
       "support": {
         "displayName": "Support",
-        "purpose": "Nav links, hints, legends, field labels, chips, status text."
+        "purpose": "Nav links, the note beside the large switch, legends, field labels, chips, status text."
       },
       "action": {
         "displayName": "Action",
@@ -472,6 +484,11 @@
         "name": "lamp-glow",
         "value": "0 0 1.1rem rgba(91, 59, 255, .75)",
         "purpose": "The lit switch thumb."
+      },
+      {
+        "name": "scroll-line-breath",
+        "value": "text-shadow: 0 .1em .9em color-mix(in srgb, var(--scrim) 80%, transparent)",
+        "purpose": "A scrim shaped to the letters, on scroll lines only."
       }
     ],
     "motion": [
@@ -498,7 +515,7 @@
       {
         "name": "plate-lamp",
         "value": ".8s var(--ease)",
-        "purpose": "Plate mask radius opening and closing."
+        "purpose": "Product plate mask radius opening and closing."
       },
       {
         "name": "strike-to-white",
@@ -521,9 +538,9 @@
         "purpose": "Exponential follow of the pointer lamp: 1 - exp(-dt * rate)."
       },
       {
-        "name": "clap-repeat",
-        "value": "6.5s, first at about .9s",
-        "purpose": "Automatic chalk cloud on the opening stage; a manual clap resets it; off with reduced motion."
+        "name": "scroll-line",
+        "value": "enter first 28% of its slot: 9vw from its side, ease-out cubic; leave last 28%: 11vh up",
+        "purpose": "Scrubbed by scroll, with opacity following both; absent under reduced motion."
       }
     ],
     "breakpoints": [
@@ -544,7 +561,7 @@
       "refersTo": "button-primary",
       "description": "The one action: an oblique lime plate on the system slant.",
       "html": "<button class=\"ds-btn\" type=\"button\"><span>Quiero probarlo</span></button>",
-      "css": ".ds-btn{position:relative;display:inline-block;padding:.92rem 1.7rem;border:0;background:none;color:#050505;font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:800;font-size:1.0625rem;line-height:1;font-stretch:112%;white-space:nowrap;cursor:pointer;isolation:isolate}.ds-btn::before,.ds-btn::after{content:'';position:absolute;inset:0;z-index:-1;transform:skewX(var(--slant,-14deg))}.ds-btn::before{background:var(--lime,#9dff12);box-shadow:0 .6rem 2rem -.6rem rgba(157,255,18,.55);transition:box-shadow .4s cubic-bezier(.16,1,.3,1)}.ds-btn::after{background:var(--bone,#eceadf);clip-path:inset(0 100% 0 0);transition:clip-path .45s cubic-bezier(.16,1,.3,1)}.ds-btn:hover::after{clip-path:inset(0 0 0 0)}.ds-btn:hover::before{box-shadow:0 .8rem 2.8rem -.5rem rgba(157,255,18,.8)}.ds-btn:active span{display:inline-block;transform:translateY(1px)}.ds-btn:focus-visible{outline:2px solid var(--lime,#9dff12);outline-offset:3px}"
+      "css": ".ds-btn{position:relative;display:inline-block;padding:.92rem 1.7rem;border:0;background:none;color:#050505;font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:800;font-size:1.0625rem;line-height:1;font-stretch:112%;white-space:nowrap;cursor:pointer;isolation:isolate}.ds-btn::before,.ds-btn::after{content:'';position:absolute;inset:0;z-index:-1;transform:skewX(var(--slant,-14deg))}.ds-btn::before{background:var(--lime,#9dff12);box-shadow:0 .6rem 2rem -.6rem rgba(157,255,18,.55);transition:box-shadow .4s cubic-bezier(.16,1,.3,1)}.ds-btn::after{background:var(--bone,#eceadf);clip-path:inset(0 100% 0 0);transition:clip-path .45s cubic-bezier(.16,1,.3,1)}.ds-btn:hover::after{clip-path:inset(0 0 0 0)}.ds-btn:hover::before{box-shadow:0 .8rem 2.8rem -.5rem rgba(157,255,18,.8)}.ds-btn:active span{display:inline-block;transform:translateY(1px)}.ds-btn:focus-visible{outline:2px solid var(--focus,#9dff12);outline-offset:3px}"
     },
     {
       "name": "Action Plate, small",
@@ -552,7 +569,7 @@
       "refersTo": "button-primary-small",
       "description": "The same plate at nav size, with the same wipe.",
       "html": "<button class=\"ds-btn-small\" type=\"button\"><span>Probarlo</span></button>",
-      "css": ".ds-btn-small{position:relative;display:inline-block;padding:.62rem 1.05rem;border:0;background:none;color:#050505;font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:800;font-size:.9375rem;line-height:1;font-stretch:112%;white-space:nowrap;cursor:pointer;isolation:isolate}.ds-btn-small::before,.ds-btn-small::after{content:'';position:absolute;inset:0;z-index:-1;transform:skewX(var(--slant,-14deg))}.ds-btn-small::before{background:var(--lime,#9dff12);box-shadow:0 .6rem 2rem -.6rem rgba(157,255,18,.55);transition:box-shadow .4s cubic-bezier(.16,1,.3,1)}.ds-btn-small::after{background:var(--bone,#eceadf);clip-path:inset(0 100% 0 0);transition:clip-path .45s cubic-bezier(.16,1,.3,1)}.ds-btn-small:hover::after{clip-path:inset(0 0 0 0)}.ds-btn-small:hover::before{box-shadow:0 .8rem 2.8rem -.5rem rgba(157,255,18,.8)}.ds-btn-small:active span{display:inline-block;transform:translateY(1px)}.ds-btn-small:focus-visible{outline:2px solid var(--lime,#9dff12);outline-offset:3px}"
+      "css": ".ds-btn-small{position:relative;display:inline-block;padding:.62rem 1.05rem;border:0;background:none;color:#050505;font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:800;font-size:.9375rem;line-height:1;font-stretch:112%;white-space:nowrap;cursor:pointer;isolation:isolate}.ds-btn-small::before,.ds-btn-small::after{content:'';position:absolute;inset:0;z-index:-1;transform:skewX(var(--slant,-14deg))}.ds-btn-small::before{background:var(--lime,#9dff12);box-shadow:0 .6rem 2rem -.6rem rgba(157,255,18,.55);transition:box-shadow .4s cubic-bezier(.16,1,.3,1)}.ds-btn-small::after{background:var(--bone,#eceadf);clip-path:inset(0 100% 0 0);transition:clip-path .45s cubic-bezier(.16,1,.3,1)}.ds-btn-small:hover::after{clip-path:inset(0 0 0 0)}.ds-btn-small:hover::before{box-shadow:0 .8rem 2.8rem -.5rem rgba(157,255,18,.8)}.ds-btn-small:active span{display:inline-block;transform:translateY(1px)}.ds-btn-small:focus-visible{outline:2px solid var(--focus,#9dff12);outline-offset:3px}"
     },
     {
       "name": "Lamp Switch",
@@ -560,14 +577,14 @@
       "refersTo": "lamp-switch",
       "description": "The rocker that strikes the room between UV and white light.",
       "html": "<button class=\"ds-rocker\" type=\"button\" role=\"switch\" aria-checked=\"true\" aria-label=\"Lámpara ultravioleta\" onclick=\"this.setAttribute('aria-checked',this.getAttribute('aria-checked')!=='true')\"><span>Luz</span><span>UV</span></button>",
-      "css": ".ds-rocker{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;padding:3px;border:1px solid #34353a;background:#111214;color:#b5b3c2;font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:700;font-size:.8125rem;line-height:1;font-stretch:110%;letter-spacing:.02em;text-transform:uppercase;cursor:pointer;transform:skewX(var(--slant,-14deg))}.ds-rocker::before{content:'';position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);background:var(--bone,#eceadf);transition:transform .28s cubic-bezier(.16,1,.3,1),background .2s}.ds-rocker[aria-checked='true']::before{transform:translateX(100%);background:var(--violet,#5b3bff);box-shadow:0 0 1.1rem rgba(91,59,255,.75)}.ds-rocker span{position:relative;padding:.46rem .72rem;transform:skewX(calc(var(--slant,-14deg) * -1));transition:color .2s}.ds-rocker[aria-checked='true'] span:last-child{color:#fff}.ds-rocker[aria-checked='false'] span:first-child{color:#000}.ds-rocker:hover{border-color:#66676e}.ds-rocker:focus-visible{outline:2px solid var(--lime,#9dff12);outline-offset:3px}"
+      "css": ".ds-rocker{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;padding:3px;border:1px solid #34353a;background:#111214;color:#b5b3c2;font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:700;font-size:.8125rem;line-height:1;font-stretch:110%;letter-spacing:.02em;text-transform:uppercase;cursor:pointer;transform:skewX(var(--slant,-14deg))}.ds-rocker::before{content:'';position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);background:var(--bone,#eceadf);transition:transform .28s cubic-bezier(.16,1,.3,1),background .2s}.ds-rocker[aria-checked='true']::before{transform:translateX(100%);background:var(--violet,#5b3bff);box-shadow:0 0 1.1rem rgba(91,59,255,.75)}.ds-rocker span{position:relative;padding:.46rem .72rem;transform:skewX(calc(var(--slant,-14deg) * -1));transition:color .2s}.ds-rocker[aria-checked='true'] span:last-child{color:#fff}.ds-rocker[aria-checked='false'] span:first-child{color:#000}.ds-rocker:hover{border-color:#66676e}.ds-rocker:focus-visible{outline:2px solid var(--focus,#9dff12);outline-offset:3px}"
     },
     {
       "name": "Specimen Label",
       "kind": "card",
       "refersTo": "specimen-label-uv",
       "description": "Paper with optical brightener: number, name and dry field note.",
-      "html": "<aside class=\"ds-label\"><b>Nº 001</b><span>Palmada antes de subir</span><small>Parque, 22:14</small></aside>",
+      "html": "<aside class=\"ds-label\"><b>Nº 001</b><span>Palmada y arriba</span><small>Parque, 22:14</small></aside>",
       "css": ".ds-label{display:grid;gap:.05rem;width:max-content;max-width:13.5rem;padding:.55rem .75rem .6rem;background:var(--paper,#cdd1ff);color:var(--paper-ink,#15142a);font-family:Archivo,system-ui,sans-serif;font-size:.8125rem;font-stretch:88%;line-height:1.25;transform:rotate(-1.4deg);box-shadow:0 .75rem 1.5rem -.5rem rgba(0,0,0,.8),0 0 1.6rem -.6rem #7c7dff}.ds-label b{font-weight:800;font-size:.75rem;letter-spacing:.04em}.ds-label span{font-weight:700;font-size:.9375rem;font-stretch:100%}.ds-label small{font-size:.8125rem}"
     },
     {
@@ -584,7 +601,7 @@
       "refersTo": "choice-chip",
       "description": "A real radio shown as a square outlined tag.",
       "html": "<div class=\"ds-chips\"><label><input type=\"radio\" name=\"ds-sport\" checked><span>Calistenia</span></label><label><input type=\"radio\" name=\"ds-sport\"><span>Escalada</span></label></div>",
-      "css": ".ds-chips{display:flex;flex-wrap:wrap;gap:.5rem;font-family:Archivo,system-ui,sans-serif;}.ds-chips label{position:relative;cursor:pointer}.ds-chips input{position:absolute;opacity:0;width:1px;height:1px}.ds-chips span{display:block;padding:.5rem .85rem;border:1px solid var(--line,#4d4e56);color:var(--fg,#eceadf);font-size:.9375rem;transition:background .2s,color .2s,border-color .2s}.ds-chips label:hover span{border-color:var(--fg,#eceadf)}.ds-chips input:checked+span{background:var(--fg,#eceadf);border-color:var(--fg,#eceadf);color:var(--ground,#030304);font-weight:600}.ds-chips input:focus-visible+span{outline:2px solid var(--lime,#9dff12);outline-offset:2px}"
+      "css": ".ds-chips{display:flex;flex-wrap:wrap;gap:.5rem;font-family:Archivo,system-ui,sans-serif;}.ds-chips label{position:relative;cursor:pointer}.ds-chips input{position:absolute;opacity:0;width:1px;height:1px}.ds-chips span{display:block;padding:.5rem .85rem;border:1px solid var(--line,#70717c);color:var(--fg,#eceadf);font-size:.9375rem;transition:background .2s,color .2s,border-color .2s}.ds-chips label:hover span{border-color:var(--fg,#eceadf)}.ds-chips input:checked+span{background:var(--fg,#eceadf);border-color:var(--fg,#eceadf);color:var(--ground,#030304);font-weight:600}.ds-chips input:focus-visible+span{outline:2px solid var(--focus,#9dff12);outline-offset:2px}"
     },
     {
       "name": "Underline Input",
@@ -592,7 +609,7 @@
       "refersTo": "underline-input",
       "description": "No box: a 2px underline on the ground with its label above.",
       "html": "<div class=\"ds-field\"><label for=\"ds-mail\">Tu correo</label><input id=\"ds-mail\" type=\"email\" placeholder=\"tu@correo.com\"></div>",
-      "css": ".ds-field{display:grid;gap:.35rem;font-family:Archivo,system-ui,sans-serif;}.ds-field label{font-size:.9375rem;color:var(--dim,#b5b3c2)}.ds-field input{width:100%;min-width:0;padding:.72rem .1rem;border:0;border-bottom:2px solid var(--line,#4d4e56);border-radius:0;background:transparent;color:var(--fg,#eceadf);font:inherit;font-size:1.125rem;outline:0;transition:border-color .2s}.ds-field input::placeholder{color:var(--dim,#b5b3c2);opacity:1}.ds-field input:focus{border-color:var(--lime,#9dff12)}.ds-field input[aria-invalid='true']{border-color:var(--bad,#ffb19a)}"
+      "css": ".ds-field{display:grid;gap:.35rem;font-family:Archivo,system-ui,sans-serif;}.ds-field label{font-size:.9375rem;color:var(--dim,#b5b3c2)}.ds-field input{width:100%;min-width:0;padding:.72rem .1rem;border:0;border-bottom:2px solid var(--line,#70717c);border-radius:0;background:transparent;color:var(--fg,#eceadf);font:inherit;font-size:1.125rem;outline:0;transition:border-color .2s}.ds-field input::placeholder{color:var(--dim,#b5b3c2);opacity:1}.ds-field input:focus{border-color:var(--focus,#9dff12)}.ds-field input[aria-invalid='true']{border-color:var(--bad,#ffb19a)}"
     },
     {
       "name": "Nav Link",
@@ -600,7 +617,15 @@
       "refersTo": "nav-link",
       "description": "Plain links that take a lime underline on hover.",
       "html": "<nav class=\"ds-nav\"><a href=\"#\">Freestyle</a><a href=\"#\">Cómo va</a><a href=\"#\">El bote</a><a href=\"#\">Escalada</a></nav>",
-      "css": ".ds-nav{display:flex;gap:1.6rem;font-family:Archivo,system-ui,sans-serif;}.ds-nav a{color:var(--fg,#eceadf);font-size:.9375rem;font-weight:500;text-decoration:none;text-underline-offset:.3em;text-decoration-thickness:2px}.ds-nav a:hover{text-decoration-line:underline;text-decoration-color:var(--lime,#9dff12)}.ds-nav a:focus-visible{outline:2px solid var(--lime,#9dff12);outline-offset:3px}"
+      "css": ".ds-nav{display:flex;gap:1.6rem;font-family:Archivo,system-ui,sans-serif;}.ds-nav a{color:var(--fg,#eceadf);font-size:.9375rem;font-weight:500;text-decoration:none;text-underline-offset:.3em;text-decoration-thickness:2px}.ds-nav a:hover{text-decoration-line:underline;text-decoration-color:var(--lime,#9dff12)}.ds-nav a:focus-visible{outline:2px solid var(--focus,#9dff12);outline-offset:3px}"
+    },
+    {
+      "name": "Scroll Line",
+      "kind": "custom",
+      "refersTo": "scroll-line",
+      "description": "A sentence that crosses the pinned wall, entering from its side and leaving upward.",
+      "html": "<p class=\"ds-line\">Sigues la línea aunque se haya hecho de noche.</p>",
+      "css": ".ds-line{max-width:21ch;margin:0;color:var(--fg,#eceadf);font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:700;font-stretch:112%;font-size:clamp(1.6rem,2.9vw,2.7rem);line-height:1.12;letter-spacing:-.012em;text-shadow:0 .1em .9em color-mix(in srgb,var(--scrim,#040406) 80%,transparent)}"
     },
     {
       "name": "Drench Band",
@@ -613,7 +638,7 @@
   ],
   "narrative": {
     "northStar": "The Mineral Room",
-    "overview": "**Creative North Star: \"The Mineral Room\"**\n\nMagnalume is a room for looking at fluorescent minerals, with the lights off. The screen is a blackout ground; a violet lamp rakes across the scene and whatever carries chalk answers in lime. Colour is not applied to this system, it is emitted. The lamp is already on when the visitor arrives, and from there it is theirs: they steer it, narrow it, clap chalk into it, or strike it over to white light. Everything on the page, type included, stands in that same room.\n\nThe room travels. A stage can be a rock face, a wall carrying a fingerprint, or a calisthenics park at night, and the same two lights and the same paper labels go with it. The direction asked for specimens waiting in blackout until the switch is thrown; the build rests with the UV on, and that is the behaviour recorded here.\n\nThe system has exactly two conditions, UV and white light, and one wall switch moves between them. White light does not reskin the page into a light theme: it is the same room with the tube on, so the rock shows its grey stain, the chalk goes pale, the specimen paper goes from optical blue back to bone. The transition is a strike, a fluorescent tube stuttering and catching, never a fade.\n\nDensity is low and the voice is loud in a single register: expanded heavy italics on the same lean as the wordmark, against very little else. Small print lives on paper specimen labels, the only furniture the room owns.",
+    "overview": "**Creative North Star: \"The Mineral Room\"**\n\nMagnalume is a room for looking at fluorescent minerals, with the lights off. The screen is a blackout ground; a violet lamp rakes across the scene and whatever carries chalk answers in lime. Colour is not applied to this system, it is emitted. The lamp is already on when the visitor arrives. The opening stage holds that moment still as a photograph; below it the lamp is theirs: they steer it, narrow it, walk it up a wall by scrolling, or strike it over to white light. Everything on the page, type included, stands in that same room.\n\nThe room travels. A stage can be a rock face, a wall carrying a fingerprint, or a calisthenics park at night, and the same two lights and the same paper labels go with it. The direction asked for specimens waiting in blackout until the switch is thrown; the build rests with the UV on, and that is the behaviour recorded here. It also asked for a live chalk cloud and a clap on the opening stage; the build dropped both for a composed photograph.\n\nThe system has exactly two conditions, UV and white light, and one wall switch moves between them. White light does not reskin the page into a light theme: it is the same room with the tube on, so the rock shows its grey stain, the chalk goes pale, the specimen paper goes from optical blue back to bone. A night photograph stays a night photograph, so what stands on it stays light on dark. The transition is a strike, a fluorescent tube stuttering and catching, never a fade.\n\nDensity is low and the voice is loud in a single register: expanded heavy italics on the same lean as the wordmark, against very little else. Small print lives on paper specimen labels, the only furniture the room owns.",
     "keyCharacteristics": [
       "Two lighting states driven by one number, never a light and dark theme.",
       "Colour as emission: violet is the lamp, lime is the response.",
@@ -627,12 +652,12 @@
     "rules": [
       {
         "name": "The Emission Rule",
-        "body": "Violet is the lamp and lime is the answer. Neither is a decorative fill: a colour on this page needs a physical reason to be lit. A chalk cloud filling a photograph has that reason; a lime panel behind a paragraph does not.",
+        "body": "Violet is the lamp and lime is the answer. Neither is a decorative fill: a colour on this page needs a physical reason to be lit. Chalked hands and a chalked bar blazing in a photograph have that reason; a lime panel behind a paragraph does not.",
         "section": "colors"
       },
       {
         "name": "The One Variable Rule",
-        "body": "Every room colour is a mix between its UV and white value, driven by a single `--white` number from 0 to 1. Anything that must react to the room joins that mix. There is no separate theme and no `prefers-color-scheme` branch; the visitor's hand decides.",
+        "body": "Every room colour is a mix between its UV and white value, driven by a single `--white` number from 0 to 1. Anything that must react to the room joins that mix. There is no separate theme and no `prefers-color-scheme` branch; the visitor's hand decides. The Night Photograph Rule is the one exception.",
         "section": "colors"
       },
       {
@@ -641,13 +666,18 @@
         "section": "colors"
       },
       {
+        "name": "The Night Photograph Rule",
+        "body": "A stage built on a photograph that stays night in both lights holds its foreground, soft, dim and scrim colours at their UV values, and so does the nav while it sits over that stage. White light changes the picture, never what can be read on it.",
+        "section": "colors"
+      },
+      {
         "name": "The Slanted Voice Rule",
-        "body": "Anything that speaks loudly is italic expanded Archivo; anything that explains is upright. A heavy upright headline does not exist here.",
+        "body": "Anything that speaks loudly is italic expanded Archivo; anything that explains is upright. A sentence alone on a stage speaks even when it explains, so it stays italic. A heavy upright headline does not exist here.",
         "section": "typography"
       },
       {
         "name": "The Short Sentence Rule",
-        "body": "Display and headline text are short full sentences ending in a full stop. They carry the page without a line above them.",
+        "body": "Display and headline text are short full sentences ending in a full stop, or a question mark when they ask one. They carry the page without a line above them.",
         "section": "typography"
       },
       {
@@ -665,7 +695,9 @@
       "Do keep small print on specimen paper, at label scale, with a number and a dry note.",
       "Do disclose computer-made imagery on the page, keep a provenance record beside every shipped raster, and give every image a UV and a white-light version of the same frame when it lives in the room.",
       "Do test copy over a lit image at the end of its longest line, against the brightest thing behind it, in both lights.",
-      "Do give every WebGL stage a static fallback that keeps all copy and the action."
+      "Do give every WebGL stage a static fallback that keeps all copy and the action.",
+      "Do hold text on a night photograph to its UV values in both lights.",
+      "Do let scroll-driven copy enter from a side and leave upward, and rest as a static stack under reduced motion."
     ],
     "donts": [
       "Don't fill interface surfaces with violet; beyond the lit switch thumb it exists only as lamp light in scenes and relit imagery.",
@@ -676,11 +708,7 @@
       "Don't enlarge paper into cards or panels; 13.5rem is its scale.",
       "Don't lift the Nº catalogue number out of a label to sit above a headline as an eyebrow.",
       "Don't show two lamp switches at once, or let two switches disagree.",
-      "Don't add hard offset shadows; every shadow here is soft and motivated by a real object or glow.",
-      "Don't take the opening stage's scrim as proof of legibility: at 1440 by 900 under UV the last word of the display line sits on the cloud at about 2.2:1, and 1.7:1 at its worst, under the 3:1 AA asks of large text. This is a known defect, not a rule.",
-      "Don't copy the clap's trigger as it stands: it is pointer only, so the keyboard cannot fire it, and the idle haze keeps drifting under reduced motion. Both are known defects, not rules.",
-      "Don't rely on lime for focus in white light: lime on Daylight is 1.07:1, so the shipped ring and input focus disappear there. This is a known defect, not a rule; a white-light focus mark needs a dark value such as Ok (#2c6500).",
-      "Don't treat Line as a sufficient boundary for a control: it reaches 2.49:1 under UV and 2.74:1 under white, under the 3:1 that PRODUCT.md's AA commitment asks of an input edge. It is fit for dividers; the shipped input underline and chip outline are a known defect."
+      "Don't add hard offset shadows; every shadow here is soft and motivated by a real object or glow."
     ]
   }
 }
