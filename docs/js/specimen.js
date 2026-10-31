@@ -94,39 +94,55 @@ void main() {
   float grit = fbm(p * 120., 4) * .5 + .5;
   float flow = sin((p.x * .9 + p.y + fbm(p * 2.6, 3) * .55) * 260.) * .5 + .5;
   float tooth = smoothstep(-.1, .2, h - fbm(p * 5., 3) * .6);
+  float patchy = fbm(p * 15., 3) + fbm(p * 44., 3) * .5;
 
   if (scene == 2) {
-    float ax = size.x, inset = ax * .075, postR = barR * 1.25;
+    float ax = size.x, inset = ax * .06, postR = barR * 1.35;
     float b = (p.y - barY) / barR;
     float side = p.x < ax * .5 ? p.x - inset : ax - inset - p.x;
     float pb = side / postR;
-    bool post = abs(pb) < 1. && p.y < barY + barR * 1.3;
-    bool steel = post || (abs(b) < 1. && side > 0.);
-    if (post) {
-      n = vec3(p.x < ax * .5 ? pb : -pb, 0., sqrt(1. - pb * pb));
-      m = 0.;
-    } else if (steel) {
-      n = vec3(0., b, sqrt(1. - b * b));
-    }
-    if (steel) {
-      h = .95;
+    bool post = abs(pb) < 1. && p.y < barY + barR;
+    bool onBar = abs(b) < 1. && side > 0.;
+    if (onBar || post) {
       mat = 1.;
+      h = .95;
       tooth = 1.;
+      if (onBar) {
+        n = vec3(0., b, sqrt(1. - b * b));
+        // Chalk wraps the tube, so the marks foreshorten toward its edges.
+        m = texture(marks, vec2(v.x, 1. - (barY + barR * asin(b) * .6366) / size.y)).r;
+      } else {
+        n = vec3(p.x < ax * .5 ? pb : -pb, 0., sqrt(1. - pb * pb));
+        m = 0.;
+      }
     } else {
-      float below = (p.y - barY + .07) / .075;
-      float wide = (p.x < ax * .5 ? side + .05 : side + .05) / .08;
-      h *= 1. - .75 * exp(-below * below) * smoothstep(-.2, .6, wide);
-      h -= .12 * exp(-wide * wide) * step(p.y, barY);
+      // The park at night: treeline and the dead street lamp, far beyond the lamp's reach.
+      mat = .7;
       m = 0.;
+      float trees = .24 + fbm(vec2(p.x * 2.4, 1.), 4) * .22 + fbm(vec2(p.x * 17., 3.), 3) * .05;
+      float lx = ax * .79;
+      float pole = step(abs(p.x - lx), .0035) * step(p.y, .8);
+      float arm = step(abs(p.y - .8 - (p.x - lx) * .16), .0035) * step(lx, p.x) * step(p.x, lx + .07);
+      float head = step(abs(p.x - lx - .075), .022) * step(abs(p.y - .808), .007);
+      float solid = max(max(step(p.y, trees), pole), max(arm, head));
+      h = mix(.34 + .66 * exp(-max(p.y - .2, 0.) * 2.2), .05, solid);
     }
   }
-  if (scene == 1 && bump(p) > .05) mat = .5;
+  if (scene == 1) {
+    float rise = bump(p);
+    if (rise > .05) {
+      mat = .5;
+      m *= smoothstep(.0, .05, rise - bump(p + vec2(0., .03)));
+    }
+  }
+  if (scene == 3) { tooth = 1.; patchy = 0.; }
 
-  float cover = clamp(m * mix(.72, 1.25, tooth), 0., 1.2);
-  float dust = smoothstep(1. - cover, 1. - cover + .2, grit * .82 + flow * .18);
-  float chalk = dust * smoothstep(.0, .22, m);
+  float cover = clamp(m * mix(.5, 1.02, tooth) * (1. + patchy * 1.25), 0., 1.2);
+  float dust = smoothstep(1. - cover, 1. - cover + .16, grit * .82 + flow * .18);
+  float density = scene == 3 ? 1. : .55 + .45 * smoothstep(-.2, .2, fbm(p * 62., 3));
+  float chalk = dust * smoothstep(.0, .22, m) * density;
 
-  o0 = vec4(n.xy * .5 + .5, clamp(mat > .9 ? h : h * .5 + .5, 0., 1.), mat);
+  o0 = vec4(n.xy * .5 + .5, clamp(mat > .6 ? h : h * .5 + .5, 0., 1.), mat);
   o1 = vec4(chalk, chalk, chalk, 1.);
 }`;
 
@@ -151,7 +167,7 @@ void main() {
   vec3 n = vec3(a.xy * 2. - 1., 0.);
   n.z = sqrt(max(1. - dot(n.xy, n.xy), 0.));
   float h = a.b, mat = a.a;
-  float steel = step(.9, mat);
+  float steel = step(.9, mat), far = step(.6, mat) * (1. - steel);
 
   vec2 d = p - lamp.xy;
   float r2 = dot(d, d) / (reach * reach);
@@ -160,10 +176,14 @@ void main() {
   float diff = max(dot(n, L), 0.);
   float tone = .3 + h * h * 1.1;
   vec3 lit = UV * (.03 + diff * diff * diff * 1.5) * beam * tone;
-  if (steel > .5) lit = UV * (.2 + diff * 1.15 + pow(1. - n.z, 2.) * .9) * beam;
+  if (steel > .5) {
+    float cut = smoothstep(-.08, .52, dot(n, normalize(L + vec3(0., .55, 0.))));
+    lit = UV * (.05 + cut * 1.15 + pow(1. - n.z, 3.) * cut * .9) * beam;
+  }
+  if (far > .5) lit = vec3(.02, .02, .05) * h * h + UV * beam * .05;
   vec3 R = reflect(-L, n);
   float spec = pow(max(R.z, 0.), steel > .5 ? 26. : 14.);
-  lit += UV * spec * beam * (steel > .5 ? 2.6 : .16) * tone;
+  lit += UV * spec * beam * (steel > .5 ? 2.6 : .16) * tone * (1. - far);
 
   float c = texture(t1, uv).r;
   float b1 = textureLod(t1, uv, 3.).r, b2 = textureLod(t1, uv, 5.).r, b3 = textureLod(t1, uv, 6.5).r;
@@ -173,10 +193,11 @@ void main() {
 
   vec3 sun = normalize(vec3(-.35, .55, .75));
   float side = max(dot(n, sun), 0.);
-  vec3 room = vec3(.34, .345, .36) * (.1 + side * side * 1.05) * (.34 + h * .9);
+  vec3 room = vec3(.62, .62, .6) * (.2 + side * side * 1.05) * (.4 + h * .95);
   room += vec3(.9) * pow(max(reflect(-sun, n).z, 0.), 22.) * .03;
   if (steel > .5) room = vec3(.56, .58, .62) * (.16 + side * .8) + vec3(.8) * pow(max(reflect(-sun, n).z, 0.), 18.);
-  room = mix(room, vec3(.74, .88, .74) * (.45 + side * .6), c * .92);
+  if (far > .5) room = mix(vec3(.2, .24, .21), vec3(.82, .87, .92), smoothstep(.1, .9, h));
+  room = mix(room, vec3(.56, .78, .58) * (.5 + side * .55), c * .92);
   room *= 1.05 - dot(v - .5, v - .5) * .8;
 
   vec3 col = mix(night, room, white);
@@ -258,9 +279,10 @@ export class Specimen {
     canvas.height = Math.round(canvas.width * ch / cw);
     this.scale = canvas.width / cw;
 
-    const max = cw < 760 ? 1536 : 2048;
+    // Sized from the screen width, so a tall wall keeps its detail across the viewport.
     const ratio = size[0] / size[1];
-    const tw = ratio >= 1 ? max : Math.round(max * ratio), th = ratio >= 1 ? Math.round(max / ratio) : max;
+    let tw = Math.min(Math.round(cw * Math.min(devicePixelRatio || 1, 2)), 1800), th = Math.round(tw / ratio);
+    if (th > 3000) { tw = Math.round(tw * 3000 / th); th = 3000; }
 
     const quad = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, quad);

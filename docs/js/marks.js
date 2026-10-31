@@ -89,17 +89,6 @@ export function spray(ctx, x, y, r, n, a = .75) {
   }
 }
 
-function scrawl(ctx, text, x, y, size, rot) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(rot);
-  ctx.font = `italic 800 ${size}px Archivo, sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,.95)';
-  ctx.textBaseline = 'alphabetic';
-  ctx.fillText(text, 0, 0);
-  ctx.restore();
-}
-
 export function paintHero(ctx, w, h) {
   const u = h / 100, wide = w > h * 1.1;
   if (wide) {
@@ -112,7 +101,6 @@ export function paintHero(ctx, w, h) {
     ticks(ctx, w * .33, h * .1, 5 * u, .9, 2, .8);
     spray(ctx, w * .72, h * .47, 30 * u, 90, .6);
     spray(ctx, w * .94, h * .2, 18 * u, 50, .55);
-    scrawl(ctx, 'YOUR STRENGTH LEAVES A MARK.', w * .405, h * .925, 3.15 * u, -.016);
   } else {
     const v = w / 100;
     hand(ctx, w * .55, h * .27, 30 * v, .16, false, 1);
@@ -128,35 +116,37 @@ export function paintRoute(ctx, w, h, holds, size) {
   const u = w / size[0];
   holds.forEach(([x, y, rx, ry], i) => {
     const [cx, cy] = px([x, y]);
-    blob(ctx, cx - rx * u * .18, cy + ry * u * .1, rx * u * .62, ry * u * .62, -.15, .95);
-    blob(ctx, cx + rx * u * .3, cy - ry * u * .1, rx * u * .46, ry * u * .5, .25, .8);
-    ticks(ctx, cx + (i % 2 ? -1 : 1) * rx * u * 1.35, cy - ry * u * .4, ry * u * 1.25, (i % 2 ? .4 : -.4));
-    spray(ctx, cx, cy, rx * u * 1.7, 34, .55);
+    blob(ctx, cx - rx * u * .12, cy, rx * u * .95, ry * u * 1.2, -.08, .9);
+    spray(ctx, cx, cy + ry * u, rx * u * 1.3, 26, .5);
+    if (i % 3 !== 2) {
+      ticks(ctx, cx + (i % 2 ? -1 : 1) * rx * u * 1.35, cy - ry * u * .4, ry * u * 1.25, i % 2 ? .4 : -.4, [3, 2][i % 2]);
+    }
   });
-  for (let i = 1; i < holds.length; i += 2) {
+  for (const i of [1, 4]) {
     const [cx, cy] = px(holds[i]);
-    hand(ctx, cx + holds[i][2] * u * (i % 4 === 1 ? -1.9 : 2), cy + holds[i][3] * u * 4.2, holds[i][2] * u * .92, i % 4 === 1 ? -.28 : .3, i % 4 === 1, .8);
+    hand(ctx, cx + holds[i][2] * u * (i === 1 ? -1.9 : 2), cy + holds[i][3] * u * 4.2, holds[i][2] * u * .92, i === 1 ? -.28 : .3, i === 1, .8);
   }
 }
 
 export function paintBar(ctx, w, h, barY, barR) {
   const y = h * (1 - barY), r = barR * h;
-  for (const [cx, dir] of [[w * .36, 1], [w * .66, -1]]) {
+  for (const [cx, dir, a] of [[w * .375, 1, 1], [w * .625, -1, .9]]) {
     for (let f = 0; f < 4; f++) {
-      const x = cx + (f - 1.5) * r * .9 * dir;
-      blob(ctx, x, y + r * .1, r * .38, r * 1.15, .08 * dir, 1);
-      blob(ctx, x + r * .04, y - r * .4, r * .3, r * .6, 0, .9);
+      const x = cx + (f - 1.5) * r * 1.42 * dir;
+      blob(ctx, x, y + (R() - .5) * r * .3, r * .6, r * 1.2, .1 * dir, .76 * a);
+      blob(ctx, x + r * .12 * dir, y + r * .4, r * .4, r * .5, 0, .6 * a);
     }
-    blob(ctx, cx + dir * r * 2.1, y + r * .35, r * .55, r * .92, .3 * dir, .9);
-    for (let i = 0; i < 80; i++) {
-      const sx = cx + (R() - .5) * r * 9;
-      blob(ctx, sx, y + (R() - .5) * r * 1.9, r * .3 * R(), r * .22 * R(), 0, .5 * R());
+    blob(ctx, cx + dir * r * 3.5, y + r * .2, r * .8, r * .85, .4 * dir, .68 * a);
+    blob(ctx, cx, y - r * .5, r * 3.6, r * .45, 0, .3 * a);
+    for (let i = 0; i < 110; i++) {
+      const sx = cx + (R() - .5) * r * 14;
+      blob(ctx, sx, y + (R() - .5) * r * 1.9, r * (.08 + R() * .3), r * (.06 + R() * .2), 0, .55 * R());
     }
   }
-  for (const [cx, span, a] of [[w * .51, w * .5, .34], [w * .22, w * .2, .16], [w * .82, w * .2, .14]]) {
-    for (let i = 0; i < span / (r * .14); i++) {
+  for (const [cx, span, a] of [[w * .5, w * .4, .22], [w * .2, w * .2, .1], [w * .8, w * .2, .1]]) {
+    for (let i = 0; i < span / (r * .22); i++) {
       const sx = cx + (R() - .5) * span;
-      blob(ctx, sx, y + (R() - .5) * r * 1.9, r * (.12 + R() * .4), r * (.08 + R() * .16), 0, a * R());
+      blob(ctx, sx, y + (R() - .5) * r * 1.9, r * (.08 + R() * .22), r * (.05 + R() * .1), 0, a * R());
     }
   }
 }

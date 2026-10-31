@@ -199,15 +199,17 @@ function initRoute() {
     s.view = [0, camera, 1, span];
 
     const w = stage.clientWidth, h = stage.clientHeight, narrow = w / h < 1.1;
+    const half = .11 / s.size[0] * w;
     points.forEach((pt, i) => {
       const sy = (1 - (pt.wy / WALL - camera) / span) * h;
       const sx = pt.wx / s.size[0] * w;
       const near = Math.hypot(pt.wx - s.lamp[0], pt.wy - s.lamp[1]);
       const show = clamp((.34 - near) * 7) * (1 - light.white) * (narrow ? clamp((h * .56 - sy) / 50) : 1);
-      const left = i % 2 === 1;
-      const lx = narrow ? clamp(sx + (left ? -150 : 40), 12, w - 160) : sx + (left ? 96 : -252);
+      const right = i % 2 === 1;
+      const lx = narrow ? clamp(sx - 80, 12, w - 172) : sx + (right ? half + 22 : -half - 188);
+      const ly = narrow ? sy - 104 : sy - 34;
       labels[i].style.opacity = show.toFixed(3);
-      labels[i].style.transform = `translate(${lx | 0}px, ${(sy - 34) | 0}px) rotate(${left ? 1.2 : -1.4}deg)`;
+      labels[i].style.transform = `translate(${lx | 0}px, ${ly | 0}px) rotate(${right ? 1.2 : -1.4}deg)`;
     });
   });
 }
@@ -216,8 +218,8 @@ function initRoute() {
 function initBar() {
   const section = $('#calistenia'), canvas = $('canvas', section);
   const held = pointerLamp(section);
-  const barY = .4;
-  const barR = .036;
+  const barY = .46;
+  const barR = .0165;
   let prev = 0;
   scene(section, () => new Specimen(canvas, {
     scene: 2,
@@ -231,7 +233,7 @@ function initBar() {
     const p = clamp((innerHeight - r.top) / (innerHeight + r.height));
     const idle = performance.now() - held.last > 2600;
     const tx = idle ? a * (.16 + p * .68) : held.x * a;
-    const ty = idle ? barY + .05 + Math.sin(time * .6) * (calm ? 0 : .03) : held.y;
+    const ty = idle ? barY + .03 + Math.sin(time * .6) * (calm ? 0 : .025) : held.y;
     follow(s.lamp, tx, ty, dt, idle ? 3 : 9);
   });
 }
@@ -245,7 +247,7 @@ function initClose() {
   let prev = 0;
   img.decode().catch(() => {}).then(() => {
     scene(section, () => new Specimen(canvas, {
-      scene: 0,
+      scene: 3,
       size: [ratioOf(canvas), 1],
       paint: (ctx, w, h) => paintPrint(ctx, w, h, img),
       reach: .42,
@@ -269,11 +271,8 @@ function initProgress() {
   let ticking = false;
   const measure = () => {
     ticking = false;
-    nav.classList.toggle('scrolled', scrollY > 40);
     const r = band.getBoundingClientRect();
-    const lean = innerWidth * .035;
-    const onLime = r.top + lean < 24 && r.bottom - lean > 56;
-    nav.classList.toggle('on-lime', onLime);
+    nav.classList.toggle('over-band', r.top < nav.offsetHeight && r.bottom > 0);
     if (!calm && print) {
       const p = clamp((innerHeight - r.top) / (innerHeight + r.height));
       print.style.transform = `rotate(${(-16 + p * 30).toFixed(2)}deg) scale(${(1.02 + p * .12).toFixed(3)})`;
@@ -282,6 +281,20 @@ function initProgress() {
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(measure); } }, { passive: true });
   addEventListener('resize', measure, { passive: true });
   measure();
+
+  // One switch in view: the nav gives way to the big one.
+  new IntersectionObserver(([e]) => nav.classList.toggle('yields', e.isIntersecting), { rootMargin: '-64px 0px 0px' }).observe($('.rocker-big'));
+}
+
+function initPlate() {
+  const plate = $('.plate'), img = $('.plate-img');
+  plate.addEventListener('pointermove', e => {
+    const r = img.getBoundingClientRect();
+    img.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    img.style.setProperty('--my', `${e.clientY - r.top}px`);
+    img.classList.add('lamp');
+  }, { passive: true });
+  plate.addEventListener('pointerleave', () => img.classList.remove('lamp'));
 }
 
 function initForm() {
@@ -302,7 +315,7 @@ function initForm() {
       return say('Ese correo no parece completo. Revisa que lleve @ y dominio.', 'error');
     }
     submit.disabled = true;
-    say('Esto es una vista previa: la lista aún no está abierta y tu correo no se ha guardado.', 'done');
+    say('Vista previa: tu correo no se ha guardado.', 'done');
   });
 }
 
@@ -329,6 +342,7 @@ function initResize() {
 
 initCopy();
 initProgress();
+initPlate();
 initForm();
 initResize();
 
