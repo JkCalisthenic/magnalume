@@ -219,7 +219,7 @@ function initBar() {
   const section = $('#calistenia'), canvas = $('canvas', section);
   const held = pointerLamp(section);
   const barY = .46;
-  const barR = .0165;
+  const barR = innerWidth < 760 ? .012 : .0165;
   let prev = 0;
   scene(section, () => new Specimen(canvas, {
     scene: 2,
@@ -267,12 +267,12 @@ function initClose() {
 /* Page furniture */
 
 function initProgress() {
-  const nav = $('.nav'), band = $('#pasos'), print = $('.print-ink');
+  const nav = $('.nav'), head = $('.product-head'), band = $('#pasos'), print = $('.print-ink');
   let ticking = false;
   const measure = () => {
     ticking = false;
     const r = band.getBoundingClientRect();
-    nav.classList.toggle('over-band', r.top < nav.offsetHeight && r.bottom > 0);
+    nav.classList.toggle('over-band', head.getBoundingClientRect().top < nav.offsetHeight && r.bottom > 0);
     if (!calm && print) {
       const p = clamp((innerHeight - r.top) / (innerHeight + r.height));
       print.style.transform = `rotate(${(-16 + p * 30).toFixed(2)}deg) scale(${(1.02 + p * .12).toFixed(3)})`;
@@ -283,7 +283,7 @@ function initProgress() {
   measure();
 
   // One switch in view: the nav gives way to the big one.
-  new IntersectionObserver(([e]) => nav.classList.toggle('yields', e.isIntersecting), { rootMargin: '-64px 0px 0px' }).observe($('.rocker-big'));
+  new IntersectionObserver(([e]) => nav.classList.toggle('yields', e.isIntersecting), { rootMargin: '0px' }).observe($('.rocker-big'));
 }
 
 function initPlate() {
@@ -307,7 +307,7 @@ function initForm() {
     if (!value) {
       email.setAttribute('aria-invalid', 'true');
       email.focus();
-      return say('Falta tu correo. Sin él no podemos avisarte.', 'error');
+      return say('Falta tu correo.', 'error');
     }
     if (!email.validity.valid) {
       email.setAttribute('aria-invalid', 'true');

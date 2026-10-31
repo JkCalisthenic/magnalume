@@ -129,8 +129,8 @@ export function paintRoute(ctx, w, h, holds, size) {
 }
 
 export function paintBar(ctx, w, h, barY, barR) {
-  const y = h * (1 - barY), r = barR * h;
-  for (const [cx, dir, a] of [[w * .375, 1, 1], [w * .625, -1, .9]]) {
+  const y = h * (1 - barY), r = barR * h, narrow = w < h;
+  for (const [cx, dir, a] of [[w * (narrow ? .29 : .375), 1, 1], [w * (narrow ? .71 : .625), -1, .9]]) {
     for (let f = 0; f < 4; f++) {
       const x = cx + (f - 1.5) * r * 1.42 * dir;
       blob(ctx, x, y + (R() - .5) * r * .3, r * .6, r * 1.2, .1 * dir, .76 * a);

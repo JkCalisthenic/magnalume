@@ -37,6 +37,7 @@ uniform int holdCount;
 uniform vec4 holds[8];
 uniform float barY;
 uniform float barR;
+uniform float grain;
 ${NOISE}
 
 // Fractured faces: Voronoi cells are tilted planes, blended so edges read as creases, not ink lines.
@@ -45,7 +46,7 @@ float facets(vec2 p) {
   float sum = 0., weight = 0.;
   for (int y = -2; y <= 2; y++) for (int x = -2; x <= 2; x++) {
     vec2 c = vec2(x, y), r = hash2(g + c), o = c + r - f;
-    float w = exp(-dot(o, o) * 11.);
+    float w = exp(-dot(o, o) * 24.);
     vec2 t = hash2(g + c + 19.) * 2. - 1.;
     sum += w * (dot(t, o) * .55 + r.x * .5);
     weight += w;
@@ -54,11 +55,13 @@ float facets(vec2 p) {
 }
 
 float rock(vec2 p) {
+  p *= grain;
   vec2 w = vec2(fbm(p * 1.1 + 3., 4), fbm(p * 1.1 + 9., 4));
-  vec2 q = p + w * .5;
-  float h = fbm(q * 1.7, 5) * .9;
-  h += facets(q * vec2(3.2, 4.6)) * .3;
-  h += facets(q * vec2(8.5, 12.) + 4.) * .1;
+  vec2 q = p + w * .32;
+  float h = fbm(q * 1.7, 4) * .55;
+  h += facets(q * vec2(3.2, 4.6)) * .5;
+  h += facets(q * vec2(8.5, 12.) + 4.) * .22;
+  h += facets(q * vec2(24., 31.) + 9.) * .05;
   h -= pow(max(1. - abs(gn(q * vec2(1.6, 3.4) + w)) * 14., 0.), 2.) * .05;
   h += fbm(q * 26., 4) * .07;
   return h;
@@ -97,7 +100,7 @@ void main() {
   float patchy = fbm(p * 15., 3) + fbm(p * 44., 3) * .5;
 
   if (scene == 2) {
-    float ax = size.x, inset = ax * .06, postR = barR * 1.35;
+    float ax = size.x, inset = ax * .06, postR = min(barR * 1.35, ax * .022);
     float b = (p.y - barY) / barR;
     float side = p.x < ax * .5 ? p.x - inset : ax - inset - p.x;
     float pb = side / postR;
@@ -119,13 +122,16 @@ void main() {
       // The park at night: treeline and the dead street lamp, far beyond the lamp's reach.
       mat = .7;
       m = 0.;
-      float trees = .24 + fbm(vec2(p.x * 2.4, 1.), 4) * .22 + fbm(vec2(p.x * 17., 3.), 3) * .05;
+      float crowns = pow(abs(sin(p.x * 6.5 + fbm(vec2(p.x * 2., 1.), 3) * 6.)), .55);
+      float trees = .15 + crowns * .15 + fbm(vec2(p.x * 2.4, 1.), 4) * .16 + fbm(p * 26., 3) * .05;
       float lx = ax * .79;
       float pole = step(abs(p.x - lx), .0035) * step(p.y, .8);
       float arm = step(abs(p.y - .8 - (p.x - lx) * .16), .0035) * step(lx, p.x) * step(p.x, lx + .07);
       float head = step(abs(p.x - lx - .075), .022) * step(abs(p.y - .808), .007);
       float solid = max(max(step(p.y, trees), pole), max(arm, head));
-      h = mix(.34 + .66 * exp(-max(p.y - .2, 0.) * 2.2), .05, solid);
+      float sky = .34 + .66 * exp(-max(p.y - .2, 0.) * 2.2) + fbm(p * vec2(1.4, 5.), 4) * .16;
+      float leaf = .06 + (fbm(p * 34., 4) + .5) * .17 * step(p.y, trees + .02) * (1. - pole);
+      h = mix(sky, leaf, solid);
     }
   }
   if (scene == 1) {
@@ -139,8 +145,14 @@ void main() {
 
   float cover = clamp(m * mix(.5, 1.02, tooth) * (1. + patchy * 1.25), 0., 1.2);
   float dust = smoothstep(1. - cover, 1. - cover + .16, grit * .82 + flow * .18);
-  float density = scene == 3 ? 1. : .55 + .45 * smoothstep(-.2, .2, fbm(p * 62., 3));
+  float density = .55 + .45 * smoothstep(-.2, .2, fbm(p * 62., 3));
   float chalk = dust * smoothstep(.0, .22, m) * density;
+  if (scene == 3) chalk = smoothstep(.1, .46, m) * (.82 + grit * .3);
+  // Rock keeps a mineral stain in the material channel, so it is stone in white light, not plaster.
+  if (mat < .1) {
+    float speck = smoothstep(.34, .42, gn(p * grain * 150.) + fbm(p * grain * 70., 2) * .4);
+    mat = clamp(.2 + fbm(p * grain * 3.1 + 5., 4) * .34 + speck * .1 - gn(p * grain * 42.) * .06, .01, .44);
+  }
 
   o0 = vec4(n.xy * .5 + .5, clamp(mat > .6 ? h : h * .5 + .5, 0., 1.), mat);
   o1 = vec4(chalk, chalk, chalk, 1.);
@@ -174,7 +186,8 @@ void main() {
   float beam = (exp(-r2 * 1.5) + .055 * exp(-r2 * .16)) * power;
   vec3 L = normalize(vec3(-d, lamp.z - (h - .5) * .12));
   float diff = max(dot(n, L), 0.);
-  float tone = .3 + h * h * 1.1;
+  float stain = mat < .45 ? mat / .44 : .5;
+  float tone = (.3 + h * h * 1.1) * (.62 + stain * .8);
   vec3 lit = UV * (.03 + diff * diff * diff * 1.5) * beam * tone;
   if (steel > .5) {
     float cut = smoothstep(-.08, .52, dot(n, normalize(L + vec3(0., .55, 0.))));
@@ -193,7 +206,7 @@ void main() {
 
   vec3 sun = normalize(vec3(-.35, .55, .75));
   float side = max(dot(n, sun), 0.);
-  vec3 room = vec3(.62, .62, .6) * (.2 + side * side * 1.05) * (.4 + h * .95);
+  vec3 room = mix(vec3(.3, .29, .28), vec3(.78, .76, .71), smoothstep(.15, .85, stain)) * (.26 + side * side * 1.2) * (.45 + h * .85);
   room += vec3(.9) * pow(max(reflect(-sun, n).z, 0.), 22.) * .03;
   if (steel > .5) room = vec3(.56, .58, .62) * (.16 + side * .8) + vec3(.8) * pow(max(reflect(-sun, n).z, 0.), 18.);
   if (far > .5) room = mix(vec3(.2, .24, .21), vec3(.82, .87, .92), smoothstep(.1, .9, h));
@@ -327,6 +340,7 @@ export class Specimen {
     if (holds.length) gl.uniform4fv(bake.u['holds[0]'], new Float32Array(holds.flat()));
     gl.uniform1f(bake.u.barY, barY);
     gl.uniform1f(bake.u.barR, barR);
+    gl.uniform1f(bake.u.grain, cw < 760 ? 1.8 : 1);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.deleteFramebuffer(fbo);
