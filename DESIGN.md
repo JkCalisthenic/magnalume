@@ -3,6 +3,7 @@ name: Magnalume
 description: Sports chalk that glows under UV, shown as a blackout mineral room the visitor lights by hand.
 colors:
   emission-lime: "#9dff12"
+  lime-deep: "#7fdc00"
   uv-violet: "#5b3bff"
   blackout: "#030304"
   blackout-scrim: "#040406"
@@ -58,6 +59,11 @@ typography:
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.5
+  body-large:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 400
+    lineHeight: 1.5
   support:
     fontFamily: "Archivo, system-ui, sans-serif"
     fontSize: "0.9375rem"
@@ -109,8 +115,6 @@ spacing:
   section: "clamp(5rem, 10vw, 8rem)"
   band-cut: "3.5vw"
   copy-gap: "1.4rem"
-  action-gap: "1.9rem"
-  choice-gap: "0.5rem"
 components:
   button-primary:
     backgroundColor: "{colors.emission-lime}"
@@ -165,6 +169,7 @@ components:
     padding: "0.5rem 0.85rem"
   underline-input:
     textColor: "{colors.bone}"
+    typography: "{typography.body-large}"
     rounded: "{rounded.none}"
     padding: "0.72rem 0.1rem"
   nav-link:
@@ -184,19 +189,22 @@ components:
 
 **Creative North Star: "The Mineral Room"**
 
-Magnalume is a room for looking at fluorescent minerals, with the lights off. The screen is a blackout ground; a lamp in the visitor's hand rakes across the scene and whatever carries chalk answers in lime. Colour is not applied to this system, it is emitted. Nothing is lit until someone lights it, and everything on the page, type included, stands in that same room.
+Magnalume is a room for looking at fluorescent minerals, with the lights off. The screen is a blackout ground; a violet lamp rakes across the scene and whatever carries chalk answers in lime. Colour is not applied to this system, it is emitted. The lamp is already on when the visitor arrives, and from there it is theirs: they steer it, narrow it, clap chalk into it, or strike it over to white light. Everything on the page, type included, stands in that same room.
+
+The room travels. A stage can be a rock face, a wall carrying a fingerprint, or a calisthenics park at night, and the same two lights and the same paper labels go with it. The direction asked for specimens waiting in blackout until the switch is thrown; the build rests with the UV on, and that is the behaviour recorded here.
 
 The system has exactly two conditions, UV and white light, and one wall switch moves between them. White light does not reskin the page into a light theme: it is the same room with the tube on, so the rock shows its grey stain, the chalk goes pale, the specimen paper goes from optical blue back to bone. The transition is a strike, a fluorescent tube stuttering and catching, never a fade.
 
-Density is low and the voice is loud in a single register: expanded heavy italics, cut to the same oblique as the slash in the logo, against very little else. Small print lives on paper specimen labels, the only furniture the room owns.
+Density is low and the voice is loud in a single register: expanded heavy italics on the same lean as the wordmark, against very little else. Small print lives on paper specimen labels, the only furniture the room owns.
 
 **Key Characteristics:**
 - Two lighting states driven by one number, never a light and dark theme.
 - Colour as emission: violet is the lamp, lime is the response.
+- UV is the rest state; nothing depends on the visitor finding the switch.
 - The visitor drives the lamp, by pointer, finger or scroll.
-- Sharp, oblique geometry cut to the logo slash.
+- Sharp, oblique geometry on one slant, set by the lean of the wordmark.
 - Paper appears only at specimen-label scale.
-- One lime drench is the only total field of colour.
+- One lime drench is the only flat field of colour; lit scenes may carry far more lime, as light.
 - Everything reads correctly with WebGL or the lamp unavailable.
 
 ## Colors
@@ -204,7 +212,8 @@ Density is low and the voice is loud in a single register: expanded heavy italic
 A near-black ground carrying two physically motivated colours, with every neutral defined twice, once for each lighting state.
 
 ### Primary
-- **Emission Lime** (#9dff12): what chalk gives off. It is the glow in the lit scenes, the logo slash and final e, the one action plate, the drench band, and the interaction marks (focus ring, caret, selection, nav underline, input focus, confirmation text under UV).
+- **Emission Lime** (#9dff12): what chalk gives off. It is the glow in the lit scenes and the chalk cloud, the logo slash and final e, the one action plate, the drench band, and the interaction marks (focus ring, caret, selection, nav underline, input focus, confirmation text under UV).
+- **Deep Lime** (#7fdc00): browser chrome only, the scrollbar thumb. It never appears in the page itself.
 
 ### Secondary
 - **UV Violet** (#5b3bff): the lamp itself. Almost all violet in the system arrives as light in the WebGL scenes and relit imagery. On flat interface it appears only as the lit thumb of the lamp switch.
@@ -221,7 +230,7 @@ A near-black ground carrying two physically motivated colours, with every neutra
 - **Status**: Ok (Emission Lime under UV, #2c6500 under white), Bad (#ffb19a under UV, #a32a00 under white).
 
 ### Named Rules
-**The Emission Rule.** Violet is the lamp and lime is the answer. Neither is a decorative fill: a colour on this page needs a physical reason to be lit.
+**The Emission Rule.** Violet is the lamp and lime is the answer. Neither is a decorative fill: a colour on this page needs a physical reason to be lit. A chalk cloud filling a photograph has that reason; a lime panel behind a paragraph does not.
 
 **The One Variable Rule.** Every room colour is a mix between its UV and white value, driven by a single `--white` number from 0 to 1. Anything that must react to the room joins that mix. There is no separate theme and no `prefers-color-scheme` branch; the visitor's hand decides.
 
@@ -234,15 +243,16 @@ A near-black ground carrying two physically motivated colours, with every neutra
 
 **Character:** One family pulled to both ends of its axes. Headlines run expanded, heavy and italic, like a wordmark sliding off the wall; everything that explains runs upright and quiet; label print condenses like a catalogue.
 
-Italic and width are load-bearing. Display, headline, title, action and switch roles are all italic; width comes from `font-stretch` on the self-hosted variable files (62% to 125%, weight 100 to 900). The frontmatter's `fontVariation` carries width; italic is recorded here and in the sidecar because the token schema has no slot for it.
+Italic and width are load-bearing. Display, headline, title, action and switch roles are all italic, as is the English tagline in the footer (700, width 112%); width comes from `font-stretch` on the self-hosted variable files (62% to 125%, weight 100 to 900). The frontmatter's `fontVariation` carries width; italic is recorded here and in the sidecar because the token schema has no slot for it.
 
 ### Hierarchy
 - **Display** (italic 800, clamp(2.7rem, 7vw, 6rem), 0.98, width 125%): the one page statement. Second clause drops to its own line.
-- **Headline** (italic 800, clamp(2.1rem, 4.9vw, 4.5rem), 0.98, width 125%): section statements, balanced, at most a few short lines.
+- **Headline** (italic 800, clamp(2.1rem, 4.9vw, 4.5rem), 0.98, width 125%): section statements, balanced, at most a few short lines. This is the full size; stages with a narrower copy block cap it lower, between 3.6rem and 3.9rem, keeping the same floor.
 - **Title** (italic 800, clamp(1.9rem, 3.8vw, 3.4rem), 1.02, width 125%): numbered steps inside the drench band; the numerals match it.
 - **Lead** (400, clamp(1.0625rem, 1.4vw, 1.25rem), 1.5): the paragraph under the display line, up to 31rem wide.
 - **Body** (400, 1.0625rem, 1.5; 1rem at 760px and under): paragraphs, held to 24 to 34rem.
-- **Support** (400 to 500, 0.9375rem): nav links, hints, legends, field labels, chips, status text.
+- **Body Large** (400, 1.125rem, 1.5): the input text, and the line under each step in the drench band, where it rises to weight 500.
+- **Support** (400 to 500, 0.9375rem): nav links, hints, legends, field labels, chips, status text. The footer note drops to 0.8125rem in Dim.
 - **Action** (italic 800, 1.0625rem or 0.9375rem, 1, width 112%): the action plate only.
 - **Switch** (italic 700, 0.8125rem or 1.0625rem, 1, width 110%, 0.02em, uppercase): the two words on the lamp switch, the only uppercase in the system.
 - **Label** (0.75rem 800 number with 0.04em tracking, 0.9375rem 700 title, 0.8125rem note at width 88%, all 1.25): specimen print.
@@ -254,13 +264,13 @@ Italic and width are load-bearing. Display, headline, title, action and switch r
 
 ## Layout
 
-The page is a sequence of full-bleed stages, most of them a full viewport tall (100svh) on the blackout ground. Copy anchors to the left gutter and the lit subject takes the right; a left-to-right scrim at 95deg, from the scrim colour at about 88% to clear by about 58%, makes the copy legible without boxing it. Long copy never sits on bare lit rock.
+The page is a sequence of full-bleed stages, most of them a full viewport tall (100svh) on the blackout ground. Copy anchors to the left gutter and the lit subject takes the right. Where copy crosses a lit scene a scrim at 95deg carries it without boxing it: 88% of the scrim colour at the left edge on the opening and closing stages, 78% on the pinned wall, clearing by 46% to 58% of the width. The bar stage needs none, because its copy sits on night sky above the bar. Those numbers describe the build and are not a recipe; what counts is the contrast at the end of the longest line, over the brightest thing behind it.
 
-Horizontal rhythm is one gutter, clamp(1.25rem, 4vw, 3.5rem), shared by the nav, sections, and footer. Text blocks have measures, not columns: headline blocks 27 to 56rem, paragraphs 24 to 34rem. The one true grid is a 7fr / 5fr split where a headline meets its explanation. Vertical gaps are generous and stated per pairing: about 1.4rem from statement to paragraph, 1.9rem to the action.
+Horizontal rhythm is one gutter, clamp(1.25rem, 4vw, 3.5rem), shared by the nav, sections, and footer. Text blocks have measures, not columns: headline blocks 27 to 56rem, paragraphs 24 to 34rem. The one true grid is a 7fr / 5fr split where a headline meets its explanation. Vertical gaps are generous and stated per pairing: about 1.1rem to 1.4rem from statement to paragraph, about 2rem to the action or form.
 
-A stage may be pinned while scrolling so the lamp walks a path and the visitor stays still. The drench band overlaps its neighbours by the same 3.5vw it cuts from its top and bottom edges, so the join reads as a slanted slice.
+A stage may be pinned while scrolling (the wall runs 340vh) so the lamp walks a path and the visitor stays still. The drench band overlaps its neighbours by the same 3.5vw it cuts from its top and bottom edges, so the join reads as a slanted slice.
 
-Responsive behaviour has two steps. At 1060px the nav links go and the two-column heading stacks. At 760px copy moves to the bottom of the stage, scrims rotate to rise from the bottom edge, the lit subject takes the top of the screen, pin callouts become a plain list under the image, and the field stacks over its button. Hints swap mouse wording for touch wording.
+Responsive behaviour has two steps. At 1060px the nav links go and the two-column heading stacks. At 760px copy moves to the bottom of scrimmed stages, scrims rotate to rise from the bottom edge, and the lit subject takes the top of the screen; the bar stage keeps its copy at the top, with the bar below it. Pin callouts become a plain list under the image, the opening label steps into the flow above the copy, and the field stacks over its button. Hints swap mouse wording for touch wording.
 
 ## Elevation & Depth
 
@@ -277,9 +287,9 @@ Depth comes from light, not stacking. Scene stages are flat canvases whose relie
 
 ## Shapes
 
-Corners are square everywhere: buttons, switch, labels, chips, inputs, pin callouts (0px). The system's signature form is the oblique: the action plate and the switch are skewed by -14deg, the angle of the slash through the logo's M, while their text is counter-skewed or set italic so it stays readable. The drench band is cut on the same lean with a 3.5vw polygon at top and bottom.
+Corners are square everywhere: buttons, switch, labels, chips, inputs, pin callouts (0px). The system's signature form is the oblique: the action plate and the switch are skewed by -14deg, just under the 15 to 17deg lean of the wordmark's stems, while their text is counter-skewed or set italic so it stays readable. The lime slash through the M is a far steeper stroke (about 54deg off vertical) and is not the system's angle. The drench band has its own cut: both edges climb 3.5vw across the full width, a parallel slice of about 2deg.
 
-Softness belongs to the world, not the interface. Chalk marks, handprints and the fingerprint are organic and irregular, and the rock is fractured. Paper labels sit slightly off true (about -1.4deg to 1.2deg), as if pinned by hand. The single true circle is the small ring at the end of a pin leader.
+Softness belongs to the world, not the interface. Chalk marks, drips, handprints and clouds are organic and irregular, and the rock is fractured. The fingerprint is the one recurring mark: dark ink on the drench band, lime emission on the closing wall. It is procedural, never a real person's print. Paper labels sit slightly off true (about -1.4deg to 1.2deg), as if pinned by hand. The single true circle is the small ring at the end of a pin leader.
 
 ## Components
 
@@ -289,7 +299,7 @@ Heavy, oblique, and rare: one action in one colour.
 - **Primary:** Emission Lime with near-black italic text, 0.92rem by 1.7rem, with action glow.
 - **Hover / Focus:** Bone wipes across from the left over 0.45s while the glow widens over 0.4s. The label drops 1px on press. Focus is the global 2px lime ring, offset 3px, under UV.
 - **Disabled:** 45% opacity, no wipe.
-- **Small:** 0.62rem by 1.05rem at 0.9375rem, in the nav.
+- **Small:** 0.62rem by 1.05rem at 0.9375rem, in the nav, with the same wipe.
 
 ### Choice Chips
 - **Style:** square outlined tags, 1px Line, Support type, 0.5rem gap.
@@ -301,24 +311,31 @@ Heavy, oblique, and rare: one action in one colour.
 - **Error:** the underline and status line take Bad, with a sentence saying what to fix. Confirmation takes Ok.
 
 ### Navigation
-- **Style:** fixed, gutter-wide bar: logo left, links, switch, small action. Over scenes it sits on a scrim gradient; when the drench band reaches it, it turns solid ground so lime never runs under the logo.
+- **Style:** fixed, gutter-wide bar: logo left, links, switch, small action. Over scenes it sits on a scrim gradient; from the product heading until the drench band has passed it turns solid ground, so lime never runs under the logo.
 - **Links:** Support at weight 500; hover draws a 2px lime underline offset 0.3em.
 - **Mobile:** links leave at 1060px, the small action at 760px; logo and switch stay.
 
 ### Lamp Stage
-The signature. A full-bleed WebGL2 scene of wall or bar, relit every frame by a violet lamp with lime emission where chalk lies.
-- **Holding:** the pointer or finger is the lamp, followed with an exponential ease at rate 9. A tall stage may pin and let scroll walk the lamp along a path instead.
-- **Idle:** after about 3 seconds the lamp drifts on its own at a slower rate, so a still screen is never dead. With reduced motion the drift is removed.
-- **Fallback:** without WebGL, canvases hide, stages fall back to relit imagery or a violet radial on ground, and the hint is hidden. Copy never depends on the canvas.
+The signature. A full-bleed WebGL2 scene, relit every frame by a violet lamp with lime emission where chalk lies. Three exist: the fractured rock wall with holds, the free bar in a night park with liquid chalk running off it and bare grip marks showing violet through, and the wall carrying the fingerprint.
+- **Holding:** the pointer or finger is the lamp, followed with an exponential ease at rate 9. A tall stage may pin and let scroll walk the lamp along a path instead, at the firmer rate of 12.
+- **Idle:** after about 3 seconds the lamp drifts on its own at a slower rate (1.8 to 3), so a still screen is never dead. With reduced motion the drift is removed.
+- **Fallback:** without WebGL, canvases hide, stages fall back to relit imagery or a dim violet radial (#1a1050) on ground, the pinned wall stops pinning, and the hint is hidden. Copy never depends on the canvas.
 - **White light:** the scene moves to its room render through the same `white` value as the page.
 
 ### Lit Image Pair
 How a photograph or render stands in the room, used by both the product plate and the opening stage.
-- **Structure:** the white-light image, a dim layer (92%, removed by white light), and the relit UV image on top, masked to a soft radial circle.
-- **Lamp:** the circle closes to 34vw at the pointer over 0.8s and opens to the full frame when the pointer leaves, so UV is the rest state, never a blank one. Touch does not track the mask.
+- **Structure:** the white-light image, a dim layer (92%, removed by white light), and the relit UV image on top, masked to a soft radial circle. The two images are the same frame, the UV one derived from the white one, so a fixed point in the picture holds in both.
+- **Lamp:** the circle closes to 34vw at the pointer over 0.8s and opens to the full frame when the pointer leaves, so UV is the rest state, never a blank one. Everything outside the circle falls dark, which is how the hand reads as a lamp. Touch does not track the mask.
+- **Lighting:** a pair answers only to the room's white value. Lamp power flicker reaches WebGL layers, not photographs, so a strike to UV shows on the photo as one cut.
+- **White light:** the white image is shown as it is. On the opening stage that image is the night photograph itself, under a Daylight scrim, so the left of the stage goes pale and the right stays dark. A pair is the same picture in two lights, not a day shot.
 
 ### Chalk Cloud
-Provisional: a point-sprite burst of chalk grain and mist in WebGL2 over a Lit Image Pair, thrown from a fixed point in the image on click or tap, with the switch's click sound. It repeats every 6.5 seconds, and only on demand with reduced motion. Lime under UV, pale green under white, following lamp power like any other emission.
+The clap, drawn live over the opening Lit Image Pair: WebGL2 point sprites computed in the vertex shader from each clap's start time, so a burst costs no per-frame work on the CPU.
+- **Matter:** hard grain plus soft mist (about 30% of sprites) thrown outward, drifting and falling. 1200 sprites, 640 under 760px wide. A quarter of them are a slow idle haze; up to three claps overlap.
+- **Origin:** locked to the hands, a fixed point in the image frame, and recomputed from the image's crop every frame so it lands correctly at any viewport.
+- **Trigger:** a click or tap anywhere on the stage outside links and buttons, with the switch's click sound. It also claps on its own about a second after load and every 6.5 seconds; a manual clap resets that timer. With reduced motion only the manual clap remains.
+- **Light:** lime under UV, pale green under white, scaled by lamp power like any other emission. Sprites are added as light under UV and composited as powder under white.
+- **Fallback:** without WebGL the stage keeps the photograph, which already holds a cloud, and the hint is hidden.
 
 ### Lamp Switch
 A physical rocker, the only control over the room.
@@ -338,32 +355,31 @@ The product held still for inspection: a Lit Image Pair with annotations.
 - **Pin callouts:** a 1px white leader ending in a small ring, with a square paper callout up to 13.5rem wide.
 
 ### Drench Band
-The one total field of colour, chalk everywhere.
-- **Style:** full-bleed Emission Lime with Band Ink, top and bottom cut by the band-cut slant. A single huge dark fingerprint bleeds off the right edge and rotates with scroll.
+The one flat field of colour, chalk everywhere.
+- **Style:** full-bleed Emission Lime with Band Ink, top and bottom cut by the band-cut slant. A single huge dark fingerprint bleeds off the right edge and turns about 30deg across the scroll; it holds still with reduced motion, and under 760px it drops to the foot of the band.
 - **Content:** few words per step, with oversized numerals counted in the title style.
 - **White light:** the field drops to Pale Chalk.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** start every new surface in blackout (#030304) with something waiting to be lit, and let the visitor light it.
+- **Do** set every new surface on the blackout ground (#030304) and give the visitor's hand something to light.
 - **Do** route every colour that must react to the room through the single `--white` mix, with a UV and a white value.
-- **Do** cut new oblique forms to -14deg, the logo's slash, and keep corners square (0px).
+- **Do** cut new oblique forms to -14deg, the system's slant, and keep corners square (0px).
 - **Do** set anything loud in italic expanded Archivo (weight 800, width 125%) and anything explanatory upright.
 - **Do** make the lamp state change with stepped flicker keyframes, ending on the same final frame for reduced motion.
 - **Do** keep small print on specimen paper, at label scale, with a number and a dry note.
-- **Do** disclose computer-made imagery on the page, and give every image a UV and a white-light version when it lives in the room.
+- **Do** disclose computer-made imagery on the page, keep a provenance record beside every shipped raster, and give every image a UV and a white-light version of the same frame when it lives in the room.
+- **Do** test copy over a lit image at the end of its longest line, against the brightest thing behind it, in both lights.
 - **Do** give every WebGL stage a static fallback that keeps all copy and the action.
 
 ### Don't:
 - **Don't** fill interface surfaces with violet; beyond the lit switch thumb it exists only as lamp light in scenes and relit imagery.
 - **Don't** use lime as decoration. It marks emission, the logo, the one action, and interaction state.
-- **Don't** add a second drench field, or give the lime plate to a second, different action; every plate leads to the same list.
+- **Don't** add a second flat drench field, or give the lime plate to a second, different action; every plate leads to the same list. Lime light in a scene or photograph is emission and does not count as a drench.
 - **Don't** treat white light as a light theme with its own layout; only the light changes, nothing moves.
 - **Don't** fade between lighting states; a tube stutters and catches.
 - **Don't** enlarge paper into cards or panels; 13.5rem is its scale.
 - **Don't** lift the Nº catalogue number out of a label to sit above a headline as an eyebrow.
 - **Don't** show two lamp switches at once, or let two switches disagree.
 - **Don't** add hard offset shadows; every shadow here is soft and motivated by a real object or glow.
-- **Don't** rely on lime for focus in white light: lime on Daylight is 1.07:1, so the shipped ring and input focus disappear there. This is a known defect, not a rule; a white-light focus mark needs a dark value such as Ok (#2c6500).
-- **Don't** treat Line as a sufficient boundary for a control: it reaches 2.49:1 under UV and 2.74:1 under white, under the 3:1 that PRODUCT.md's AA commitment asks of an input edge. It is fit for dividers; the shipped input underline and chip outline are a known defect.

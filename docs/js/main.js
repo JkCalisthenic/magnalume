@@ -125,7 +125,7 @@ function handsOnScreen(img) {
 
 function initHero() {
   const section = $('#hero'), canvas = $('canvas', section), img = $('.shot-uv', section);
-  const entry = scene(section, () => new Cloud(canvas), function (time) {
+  const entry = scene(section, () => new Cloud(canvas, calm), function (time) {
     const s = this.specimen;
     s.origin = handsOnScreen(img);
     if (!calm && time > this.nextClap) {
@@ -134,13 +134,14 @@ function initHero() {
     }
   });
   entry.nextClap = performance.now() / 1000 + .9;
-  section.addEventListener('click', e => {
-    if (e.target.closest('a, button') || !entry.specimen) return;
+  const clap = () => {
+    if (!entry.specimen) return;
+    const now = performance.now() / 1000;
     click();
-    entry.specimen.clap(performance.now() / 1000);
-    entry.nextClap = performance.now() / 1000 + 6.5;
-    section.classList.add('clapped');
-  });
+    entry.specimen.clap(now);
+    entry.nextClap = now + 6.5;
+  };
+  section.addEventListener('click', e => { if (!e.target.closest('a') && !e.target.closest('.rocker')) clap(); });
 }
 
 /* Route */

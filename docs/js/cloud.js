@@ -3,7 +3,7 @@
 const VERT = `#version 300 es
 in vec4 seed;
 uniform vec2 origin;
-uniform float aspect, time, scale, power;
+uniform float aspect, time, scale, power, haze;
 uniform float claps[3];
 out float alpha;
 out float mist;
@@ -23,7 +23,7 @@ void main() {
 
   float fade = smoothstep(0., .1, age) * pow(max(1. - age / life, 0.), 1.5);
   float shown = step(0., age) * step(age, life);
-  alpha = fade * shown * power * (mist > .5 ? (idle ? .03 : .075) : .9);
+  alpha = fade * shown * power * (mist > .5 ? (idle ? .03 : .075) : .9) * (idle ? haze : 1.);
   grain = seed.yz * 9.;
 
   gl_Position = vec4(origin + p * vec2(2. / aspect, 2.), 0., 1.);
@@ -58,10 +58,10 @@ function shader(gl, type, src) {
 }
 
 export class Cloud {
-  constructor(canvas) {
+  constructor(canvas, still = false) {
     const gl = canvas.getContext('webgl2', { antialias: false, alpha: true, premultipliedAlpha: true });
     if (!gl) throw new Error('no webgl2');
-    Object.assign(this, { canvas, gl, origin: [0, 0], claps: [-99, -99, -99], next: 0 });
+    Object.assign(this, { canvas, gl, still, origin: [0, 0], claps: [-99, -99, -99], next: 0 });
 
     const cw = canvas.clientWidth, ch = canvas.clientHeight, dpr = Math.min(devicePixelRatio || 1, 1.5);
     canvas.width = Math.round(cw * dpr);
@@ -104,6 +104,7 @@ export class Cloud {
     gl.uniform1f(u.scale, this.scale);
     gl.uniform1f(u.power, power);
     gl.uniform1f(u.white, white);
+    gl.uniform1f(u.haze, this.still ? 0 : 1);
     gl.uniform1fv(u['claps[0]'], this.claps);
     gl.drawArrays(gl.POINTS, 0, this.count);
   }
