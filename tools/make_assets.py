@@ -81,30 +81,29 @@ def fingerprint(n=1400):
     print_rgba.save(OUT / "fingerprint.webp", quality=70, alpha_quality=82, method=6)
 
 
-def uv_clap():
-    """Same relight for the generated hero: the chalk cloud becomes the light source of the scene."""
-    img = Image.open(SRC / "clap.png").convert("RGB")
-    a = np.asarray(img).astype(float) / 255
-    r, g, b = a[..., 0], a[..., 1], a[..., 2]
-    luma = 0.3 * r + 0.59 * g + 0.11 * b
-    cloud = np.clip((g - np.maximum(r, b) * 0.96 - 0.012) * 7, 0, 1) * np.clip(luma * 2.6, 0, 1)
-    cloud = np.maximum(cloud, np.clip((luma - 0.42) * 2.4, 0, 1) * np.clip((g - r) * 9, 0, 1))
-    body = luma[..., None] ** 1.05 * np.array([0.36, 0.22, 0.95]) * 0.9 * (1 - cloud[..., None])
-    depth = np.clip(luma * 1.75, 0, 1) ** 2.1
-    core = (cloud ** 0.9 * depth)[..., None] * LIME * 1.1
-    shadow = (cloud * (1 - depth))[..., None] * np.array([0.1, 0.06, 0.34]) * 0.8
-    bloom = sum(gaussian_filter(cloud * depth, s)[..., None] * LIME * w for s, w in ((8, 0.14), (40, 0.12)))
-    body = body + shadow
+def uv_scene(name, scratch):
+    """Night under the lamp: the people fall to violet, the chalk on the bar and the hands carries the light."""
+    day = Image.open(SRC / f"scene-{name}.png").convert("RGB")
+    a = np.asarray(day).astype(float) / 255
+    m = np.load(scratch / f"masks-{name}.npz")
+    bar, hands, chalk = m["bar"], m["hands"], m["dust"]
+    luma = (0.3 * a[..., 0] + 0.59 * a[..., 1] + 0.11 * a[..., 2])
+    lit = np.clip(bar + hands + chalk, 0, 1)
+    body = (luma[..., None] ** 1.02) * np.array([0.42, 0.26, 1.0]) * 1.05 * (1 - lit[..., None])
+    core = (bar * (0.72 + luma * 0.5) + hands * (0.42 + luma * 1.5) + chalk * 0.8)[..., None] * LIME
+    source = np.clip(bar + hands * 0.9, 0, 1)
+    bloom = sum(gaussian_filter(source, s)[..., None] * LIME * w for s, w in ((4, 0.5), (18, 0.42), (64, 0.3)))
     out = 1 - (1 - np.clip(body, 0, 1)) * (1 - np.clip(core, 0, 1)) * (1 - np.clip(bloom, 0, 1))
-    img.save(OUT / "clap-white.webp", quality=82, method=6)
-    Image.fromarray((np.clip(out, 0, 1) * 255).astype("uint8")).save(OUT / "clap-uv.webp", quality=82, method=6)
-    uv = Image.open(OUT / "clap-uv.webp").convert("RGB")
-    w, h = uv.size
-    box = (0, int(h * 0.03), w, int(h * 0.03) + int(w * 630 / 1200))
-    uv.crop(box).resize((1200, 630), Image.LANCZOS).save(OUT / "og.jpg", quality=86)
+    uv = Image.fromarray((np.clip(out, 0, 1) * 255).astype("uint8"))
+    day.save(OUT / f"scene-{name}-white.webp", quality=82, method=6)
+    uv.save(OUT / f"scene-{name}-uv.webp", quality=82, method=6)
+    if name == "wide":
+        w, h = uv.size
+        uv.crop((0, 40, w, 40 + int(w * 630 / 1200))).resize((1200, 630), Image.LANCZOS).save(OUT / "og.jpg", quality=86)
 
 
 logo_masks()
 uv_product()
 fingerprint()
-uv_clap()
+uv_scene("wide", SCRATCH)
+uv_scene("tall", SCRATCH)

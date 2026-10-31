@@ -43,21 +43,19 @@
 <main id="contenido">
   <section class="hero" id="hero">
     <div class="shot lit">
-      <img class="shot-white" src="assets/clap-white.webp" width="2016" height="1152" alt="Un atleta de calistenia, de noche en el parque, da una palmada por encima de la cabeza y lo envuelve una nube de magnesio.">
+      <picture><source media="(max-width: 759px)" srcset="assets/scene-tall-white.webp" width="1080" height="1920"><img class="shot-white" src="assets/scene-wide-white.webp" width="2016" height="1152" alt="De noche en el parque, un atleta da una palmada con las manos llenas de magnesio. Detrás, otro hace un front lever en una barra cubierta de magnesio."></picture>
       <div class="lit-dim"></div>
-      <img class="shot-uv lit-uv" src="assets/clap-uv.webp" width="2016" height="1152" alt="" aria-hidden="true">
+      <picture><source media="(max-width: 759px)" srcset="assets/scene-tall-uv.webp" width="1080" height="1920"><img class="shot-uv lit-uv" src="assets/scene-wide-uv.webp" width="2016" height="1152" alt="" aria-hidden="true"></picture>
     </div>
-    <canvas aria-hidden="true"></canvas>
     <div class="hero-copy">
       <h1>Se va la luz. <span>La barra no.</span></h1>
       <p>Magnalume es magnesio que brilla bajo luz ultravioleta. Para los que hacemos freestyle y a oscuras no vemos la barra.</p>
       <div class="hero-actions">
         <a class="btn" href="#probar"><span>Quiero probarlo</span></a>
-        <button class="hint" type="button">Da una palmada</button>
       </div>
     </div>
     <aside class="label hero-label">
-      <b>Nº 001</b><span>Palmada antes de subir</span><small>Parque, 22:14</small>
+      <b>Nº 001</b><span>Palmada y arriba</span><small>Parque, 22:14</small>
     </aside>
   </section>
 
@@ -115,10 +113,11 @@
   <section class="route" id="escalada">
     <div class="route-stage">
       <canvas aria-hidden="true"></canvas>
-      <div class="route-labels" aria-hidden="true"></div>
-      <div class="route-copy">
-        <h2>¿Escalas? La pared también.</h2>
-        <p>Las presas con magnesio se encienden bajo la lámpara. Sigues la línea aunque se haya hecho de noche.</p>
+      <div class="route-lines">
+        <h2 class="from-left">¿Escalas?</h2>
+        <h2 class="from-right">La pared también.</h2>
+        <p class="from-left">Las presas con magnesio se encienden bajo la lámpara.</p>
+        <p class="from-right">Sigues la línea aunque se haya hecho de noche.</p>
       </div>
     </div>
   </section>

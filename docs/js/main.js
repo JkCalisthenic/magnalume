@@ -1,5 +1,4 @@
 import { Specimen } from './specimen.js';
-import { Cloud } from './cloud.js';
 import { paintRoute, paintBar, paintPrint } from './marks.js';
 
 const root = document.documentElement;
@@ -111,49 +110,8 @@ function follow(lamp, x, y, dt, rate = 9) {
 const ratioOf = el => el.clientWidth / el.clientHeight;
 const ready = Promise.all([document.fonts.load('italic 800 40px Archivo'), document.fonts.ready]);
 
-/* Hero: the hands sit at a fixed point of each photo, wherever the crop lands. */
-const HANDS = [.768, .19];
-
-function handsOnScreen(img) {
-  const box = img.getBoundingClientRect(), [fx, fy] = HANDS;
-  const fit = Math.max(box.width / img.naturalWidth, box.height / img.naturalHeight) || 1;
-  const w = img.naturalWidth * fit, h = img.naturalHeight * fit;
-  const pos = getComputedStyle(img).objectPosition.split(' ').map(v => parseFloat(v) / 100);
-  const x = (box.width - w) * pos[0] + w * fx, y = (box.height - h) * pos[1] + h * fy;
-  return [x / box.width * 2 - 1, 1 - y / box.height * 2];
-}
-
-function initHero() {
-  const section = $('#hero'), canvas = $('canvas', section), img = $('.shot-uv', section);
-  const entry = scene(section, () => new Cloud(canvas, calm), function (time) {
-    const s = this.specimen;
-    s.origin = handsOnScreen(img);
-    if (!calm && time > this.nextClap) {
-      s.clap(time);
-      this.nextClap = time + 6.5;
-    }
-  });
-  entry.nextClap = performance.now() / 1000 + .9;
-  const clap = () => {
-    if (!entry.specimen) return;
-    const now = performance.now() / 1000;
-    click();
-    entry.specimen.clap(now);
-    entry.nextClap = now + 6.5;
-  };
-  section.addEventListener('click', e => { if (!e.target.closest('a') && !e.target.closest('.rocker')) clap(); });
-}
-
 /* Route */
-const HOLDS = [
-  { x: .58, y: .92, n: '014', name: 'Reunión', note: 'Aquí arriba se respira' },
-  { x: .67, y: .78, n: '015', name: 'Canto bueno', note: 'Mano derecha' },
-  { x: .52, y: .64, n: '016', name: 'Romo', note: 'Que no se te vaya el pie' },
-  { x: .7, y: .5, n: '017', name: 'Agujero', note: 'Caben dos dedos' },
-  { x: .56, y: .36, n: '018', name: 'Regleta', note: 'Mano izquierda' },
-  { x: .74, y: .22, n: '019', name: 'Último paso', note: 'Sin mirar abajo' },
-  { x: .62, y: .08, n: '020', name: 'Suelo', note: 'Bajas entero' },
-];
+const HOLDS = [[.58, .92], [.67, .78], [.52, .64], [.7, .5], [.56, .36], [.74, .22], [.62, .08]].map(([x, y]) => ({ x, y }));
 const WALL = 2.7;
 
 function catmull(points, t) {
@@ -165,14 +123,8 @@ function catmull(points, t) {
 
 function initRoute() {
   const section = $('#escalada'), stage = $('.route-stage', section), canvas = $('canvas', section);
-  const layer = $('.route-labels', section);
-  const labels = HOLDS.map(h => {
-    const el = document.createElement('aside');
-    el.className = 'label label-float';
-    el.innerHTML = `<b>Nº ${h.n}</b><span>${h.name}</span><small>${h.note}</small>`;
-    layer.append(el);
-    return el;
-  });
+  const lines = $$('.route-lines > *', section);
+  if (!calm) section.classList.add('route-live');
 
   const placed = (a) => {
     const narrow = a < 1.1;
@@ -209,19 +161,20 @@ function initRoute() {
     const camera = clamp(s.lamp[1] / WALL - span * .46, 0, 1 - span);
     s.view = [0, camera, 1, span];
 
-    const w = stage.clientWidth, h = stage.clientHeight, narrow = w / h < 1.1;
-    const half = .11 / s.size[0] * w;
-    points.forEach((pt, i) => {
-      const sy = (1 - (pt.wy / WALL - camera) / span) * h;
-      const sx = pt.wx / s.size[0] * w;
-      const near = Math.hypot(pt.wx - s.lamp[0], pt.wy - s.lamp[1]);
-      const show = clamp((.34 - near) * 7) * (1 - light.white) * (narrow ? clamp((h * .56 - sy) / 50) : 1);
-      const right = i % 2 === 1;
-      const lx = narrow ? clamp(sx - 80, 12, w - 172) : sx + (right ? half + 22 : -half - 188);
-      const ly = narrow ? sy - 104 : sy - 34;
-      labels[i].style.opacity = show.toFixed(3);
-      labels[i].style.transform = `translate(${lx | 0}px, ${ly | 0}px) rotate(${right ? 1.2 : -1.4}deg)`;
-    });
+    if (!calm) showLines(lines, p);
+  });
+}
+
+// One line at a time: it comes in from its side, holds, and leaves upward. Scrolling back replays it.
+function showLines(lines, p) {
+  const slot = 1 / lines.length;
+  lines.forEach((el, i) => {
+    const t = (p - i * slot) / slot;
+    const enter = i === 0 ? 1 : clamp(t / .28), leave = i === lines.length - 1 ? 0 : clamp((t - .72) / .28);
+    const eased = 1 - (1 - enter) ** 3;
+    const side = el.classList.contains('from-left') ? -1 : 1;
+    el.style.opacity = (eased * (1 - leave)).toFixed(3);
+    el.style.transform = `translate(${(side * (1 - eased) * 9).toFixed(2)}vw, ${(-leave * 11).toFixed(2)}vh)`;
   });
 }
 
@@ -278,11 +231,12 @@ function initClose() {
 /* Page furniture */
 
 function initProgress() {
-  const nav = $('.nav'), head = $('.product-head'), band = $('#pasos'), print = $('.print-ink');
+  const nav = $('.nav'), hero = $('#hero'), head = $('.product-head'), band = $('#pasos'), print = $('.print-ink');
   let ticking = false;
   const measure = () => {
     ticking = false;
     const r = band.getBoundingClientRect();
+    nav.classList.toggle('over-hero', hero.getBoundingClientRect().bottom > nav.offsetHeight);
     nav.classList.toggle('over-band', head.getBoundingClientRect().top < nav.offsetHeight && r.bottom > 0);
     if (!calm && print) {
       const p = clamp((innerHeight - r.top) / (innerHeight + r.height));
@@ -355,12 +309,10 @@ function initResize() {
 initCopy();
 initProgress();
 lampOver($('.plate'), $('.plate-img'));
-lampOver($('#hero'), $('.shot'));
 initForm();
 initResize();
 
 ready.then(() => {
-  initHero();
   initRoute();
   initBar();
   initClose();

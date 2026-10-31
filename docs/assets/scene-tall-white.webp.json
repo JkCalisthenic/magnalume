@@ -1,0 +1,4 @@
+{
+  "prompt": "Composite by tools/make_scene.py of three RealVisXL V5 renders on local ComfyUI (tools/source/plate.png, lever.png seed 9201 with a drawn depth guide, clapper.png seed 8202), then a 0.2 denoise pass by tools/refine.py.",
+  "createdAt": "2026-10-31T22:02:52.996Z"
+}

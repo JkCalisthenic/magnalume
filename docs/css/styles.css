@@ -172,16 +172,17 @@ p { margin: 0; text-wrap: pretty; }
 .nav nav a:hover { text-decoration-line: underline; text-decoration-color: var(--lime); }
 
 /* Hero */
-.hero { position: relative; display: flex; align-items: flex-end; min-height: 100vh; min-height: 100svh; padding: 7rem var(--gutter) clamp(2.5rem, 7vh, 5rem); overflow: hidden; background: var(--ground); cursor: pointer; }
+.hero { position: relative; display: flex; align-items: flex-end; min-height: 100vh; min-height: 100svh; padding: 7rem var(--gutter) clamp(2.5rem, 7vh, 5rem); overflow: hidden; background: var(--ground); }
+/* The photo stays a night shot in either light, so what sits on it stays light on dark. */
+.hero, .nav.over-hero { --fg: #eceadf; --soft: #e2e0e4; --dim: #b5b3c2; --scrim: #040406; }
 .shot { position: absolute; inset: 0; }
-.shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 30%; }
-.hero canvas { pointer-events: none; }
-.hero::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 62% at 16% 82%, color-mix(in srgb, var(--scrim) 94%, transparent) 0 44%, transparent 100%), linear-gradient(95deg, color-mix(in srgb, var(--scrim) 80%, transparent) 0%, color-mix(in srgb, var(--scrim) 42%, transparent) 34%, transparent 60%); pointer-events: none; }
+.shot picture { display: contents; }
+.shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 72% 30%; }
+.hero::after { content: ""; position: absolute; inset: 0; background: radial-gradient(48% 54% at 12% 86%, color-mix(in srgb, var(--scrim) 92%, transparent) 0 40%, transparent 100%), linear-gradient(95deg, color-mix(in srgb, var(--scrim) 58%, transparent) 0%, transparent 44%); pointer-events: none; }
 .hero-copy { position: relative; z-index: 2; max-width: 56rem; pointer-events: none; }
 .hero-copy a { pointer-events: auto; }
 .hero-copy > p { max-width: 31rem; margin-top: 1.4rem; font-size: clamp(1.0625rem, 1.4vw, 1.25rem); color: var(--soft); }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.9rem; margin-top: 1.9rem; }
-.hint { position: relative; z-index: 2; padding: .35rem 0; border: 0; background: none; color: var(--fg); font: inherit; font-size: .9375rem; font-weight: 500; text-decoration: underline; text-decoration-color: var(--lime); text-decoration-thickness: 2px; text-underline-offset: .32em; cursor: pointer; pointer-events: auto; }
 .hero-label { position: absolute; z-index: 2; right: var(--gutter); bottom: clamp(2.5rem, 7vh, 5rem); transform: rotate(-1.4deg); }
 
 /* Product */
@@ -250,11 +251,15 @@ p { margin: 0; text-wrap: pretty; }
 .route { position: relative; height: 340vh; background: var(--ground); }
 .route-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 .route-stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(95deg, color-mix(in srgb, var(--scrim) 78%, transparent) 0%, color-mix(in srgb, var(--scrim) 40%, transparent) 28%, transparent 46%); pointer-events: none; }
-.route-copy { position: absolute; z-index: 2; left: var(--gutter); top: 50%; translate: 0 -50%; max-width: 27rem; }
-.route-copy h2 { font-size: clamp(2.1rem, 4vw, 3.6rem); }
-.route-copy p { margin-top: 1.25rem; max-width: 24rem; color: var(--soft); }
-.route-labels { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.label-float { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform, opacity; }
+.route-lines { position: absolute; z-index: 2; inset: 0; display: grid; align-content: center; gap: 1.1rem; padding: 0 var(--gutter); pointer-events: none; }
+.route-lines h2 { font-size: clamp(2.4rem, 5.6vw, 5.4rem); }
+.route-lines p { max-width: 21ch; font-style: italic; font-weight: 700; font-stretch: 112%; font-size: clamp(1.6rem, 2.9vw, 2.7rem); line-height: 1.12; letter-spacing: -.012em; }
+.route-lines > * { text-shadow: 0 .1em .9em color-mix(in srgb, var(--scrim) 80%, transparent); }
+.route-lines .from-right { justify-self: end; text-align: right; }
+.route-live .route-lines { display: block; }
+.route-live .route-lines > * { position: absolute; top: 42%; left: var(--gutter); right: var(--gutter); opacity: 0; will-change: transform, opacity; }
+.route-live .route-lines .from-left { right: auto; max-width: min(46vw, 34rem); }
+.route-live .route-lines .from-right { left: auto; max-width: min(46vw, 34rem); }
 
 /* Bar */
 .bar { position: relative; display: flex; align-items: flex-start; min-height: 100vh; min-height: 100svh; padding: clamp(5rem, 13vh, 8rem) var(--gutter) 3rem; background: var(--ground); overflow: hidden; }
@@ -306,8 +311,7 @@ fieldset input:focus-visible + span { outline: 2px solid var(--focus); outline-o
 
 .no-gl .close { background: var(--ground) url(../assets/product-uv.webp) 70% 30% / cover no-repeat; }
 .no-gl .bar, .no-gl .route-stage { background: radial-gradient(70% 60% at 62% 55%, #1a1050, var(--ground)); }
-.no-gl .hint { display: none; }
-.no-gl .route { height: auto; }
+.no-gl .no-gl .route { height: auto; }
 .no-gl .route-stage { position: relative; height: auto; min-height: 70vh; }
 .no-gl canvas { display: none; }
 
@@ -320,12 +324,11 @@ fieldset input:focus-visible + span { outline: 2px solid var(--focus); outline-o
   body { font-size: 1rem; }
   .nav { gap: .6rem; }
   .btn-small { display: none; }
-  .shot img { object-position: 84% 30%; }
+  .shot img { object-position: 50% 20%; }
   .hero { flex-direction: column; align-items: stretch; justify-content: flex-end; padding-bottom: 2rem; }
   .hero::after { background: linear-gradient(0deg, color-mix(in srgb, var(--scrim) 92%, transparent) 0%, color-mix(in srgb, var(--scrim) 66%, transparent) 36%, transparent 58%); }
   .hero-label { position: relative; order: -1; align-self: flex-end; right: auto; bottom: auto; margin-bottom: 1.1rem; }
-  .hint { width: 100%; }
-
+  
   .plate-img { aspect-ratio: 1 / 1; }
   .plate-img img { object-position: 19% 50%; }
   .pins { position: static; display: grid; gap: .9rem; padding: 1.4rem var(--gutter) 2.5rem; }
@@ -340,7 +343,7 @@ fieldset input:focus-visible + span { outline: 2px solid var(--focus); outline-o
   .steps-note { padding-left: 0; }
 
   .route-stage::after { background: linear-gradient(0deg, color-mix(in srgb, var(--scrim) 95%, transparent) 0%, color-mix(in srgb, var(--scrim) 80%, transparent) 26%, transparent 46%); }
-  .route-copy { top: auto; bottom: 1.6rem; translate: none; right: var(--gutter); max-width: none; }
+  .route-live .route-lines .from-left, .route-live .route-lines .from-right { top: 66%; max-width: none; }
   .bar { padding-top: 5.5rem; }
   .bar-label { bottom: 1.6rem; right: var(--gutter); }
 
