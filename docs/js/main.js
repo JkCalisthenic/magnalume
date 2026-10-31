@@ -1,5 +1,6 @@
 import { Specimen } from './specimen.js';
-import { paintHero, paintRoute, paintBar, paintPrint } from './marks.js';
+import { Cloud } from './cloud.js';
+import { paintRoute, paintBar, paintPrint } from './marks.js';
 
 const root = document.documentElement;
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -110,38 +111,47 @@ function follow(lamp, x, y, dt, rate = 9) {
 const ratioOf = el => el.clientWidth / el.clientHeight;
 const ready = Promise.all([document.fonts.load('italic 800 40px Archivo'), document.fonts.ready]);
 
-/* Hero */
+/* Hero: the hands sit at a fixed point of each photo, wherever the crop lands. */
+const HANDS = [.768, .19];
+
+function handsOnScreen(img) {
+  const box = img.getBoundingClientRect(), [fx, fy] = HANDS;
+  const fit = Math.max(box.width / img.naturalWidth, box.height / img.naturalHeight) || 1;
+  const w = img.naturalWidth * fit, h = img.naturalHeight * fit;
+  const pos = getComputedStyle(img).objectPosition.split(' ').map(v => parseFloat(v) / 100);
+  const x = (box.width - w) * pos[0] + w * fx, y = (box.height - h) * pos[1] + h * fy;
+  return [x / box.width * 2 - 1, 1 - y / box.height * 2];
+}
+
 function initHero() {
-  const section = $('#hero'), canvas = $('canvas', section);
-  const held = pointerLamp(section);
-  let prev = 0;
-  scene(section, () => new Specimen(canvas, {
-    scene: 0,
-    size: [ratioOf(canvas), 1],
-    paint: paintHero,
-    reach: ratioOf(canvas) > 1.1 ? .37 : .3,
-  }), function (time) {
-    const s = this.specimen, a = s.size[0], dt = Math.min(time - prev, .05);
-    prev = time;
-    const wide = a > 1.1;
-    const idle = performance.now() - held.last > 3200;
-    const home = wide ? [a * .7, .54] : [a * .55, .73];
-    const sway = calm ? [0, 0] : [Math.sin(time * .47) * a * (wide ? .17 : .28), Math.sin(time * .73 + 1) * (wide ? .23 : .14)];
-    const tx = idle ? home[0] + sway[0] : held.x * a;
-    const ty = idle ? home[1] + sway[1] : held.y;
-    follow(s.lamp, tx, ty, dt, idle ? 1.6 : 9);
+  const section = $('#hero'), canvas = $('canvas', section), img = $('.shot-uv', section);
+  const entry = scene(section, () => new Cloud(canvas), function (time) {
+    const s = this.specimen;
+    s.origin = handsOnScreen(img);
+    if (!calm && time > this.nextClap) {
+      s.clap(time);
+      this.nextClap = time + 6.5;
+    }
+  });
+  entry.nextClap = performance.now() / 1000 + .9;
+  section.addEventListener('click', e => {
+    if (e.target.closest('a, button') || !entry.specimen) return;
+    click();
+    entry.specimen.clap(performance.now() / 1000);
+    entry.nextClap = performance.now() / 1000 + 6.5;
+    section.classList.add('clapped');
   });
 }
 
 /* Route */
 const HOLDS = [
-  { x: .62, y: .08, n: '014', name: 'Salida', note: 'Dos manos, mismo canto' },
-  { x: .74, y: .22, n: '015', name: 'Regleta', note: 'Mano izquierda' },
-  { x: .56, y: .36, n: '016', name: 'Romo', note: 'Que no se te vaya el pie' },
+  { x: .58, y: .92, n: '014', name: 'Reunión', note: 'Aquí arriba se respira' },
+  { x: .67, y: .78, n: '015', name: 'Canto bueno', note: 'Mano derecha' },
+  { x: .52, y: .64, n: '016', name: 'Romo', note: 'Que no se te vaya el pie' },
   { x: .7, y: .5, n: '017', name: 'Agujero', note: 'Caben dos dedos' },
-  { x: .52, y: .64, n: '018', name: 'Canto bueno', note: 'Aquí se respira' },
-  { x: .67, y: .78, n: '019', name: 'Lanzar', note: 'Sin pensarlo' },
-  { x: .58, y: .92, n: '020', name: 'Top', note: 'Dos manos y a casa' },
+  { x: .56, y: .36, n: '018', name: 'Regleta', note: 'Mano izquierda' },
+  { x: .74, y: .22, n: '019', name: 'Último paso', note: 'Sin mirar abajo' },
+  { x: .62, y: .08, n: '020', name: 'Suelo', note: 'Bajas entero' },
 ];
 const WALL = 2.7;
 
@@ -216,7 +226,7 @@ function initRoute() {
 
 /* Bar */
 function initBar() {
-  const section = $('#calistenia'), canvas = $('canvas', section);
+  const section = $('#freestyle'), canvas = $('canvas', section);
   const held = pointerLamp(section);
   const barY = .46;
   const barR = innerWidth < 760 ? .012 : .0165;
@@ -224,7 +234,7 @@ function initBar() {
   scene(section, () => new Specimen(canvas, {
     scene: 2,
     size: [ratioOf(canvas), 1],
-    barY, barR, reach: .38, lampZ: .36,
+    barY, barR, reach: .62, lampZ: .36,
     paint: (ctx, w, h) => paintBar(ctx, w, h, barY, barR),
   }), function (time) {
     const s = this.specimen, a = s.size[0], dt = Math.min(time - prev, .05);
@@ -286,15 +296,16 @@ function initProgress() {
   new IntersectionObserver(([e]) => nav.classList.toggle('yields', e.isIntersecting), { rootMargin: '0px' }).observe($('.rocker-big'));
 }
 
-function initPlate() {
-  const plate = $('.plate'), img = $('.plate-img');
-  plate.addEventListener('pointermove', e => {
+// Over a photo the lamp is a mask: the UV plate shows only where the beam lands.
+function lampOver(area, img) {
+  area.addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
     const r = img.getBoundingClientRect();
     img.style.setProperty('--mx', `${e.clientX - r.left}px`);
     img.style.setProperty('--my', `${e.clientY - r.top}px`);
     img.classList.add('lamp');
   }, { passive: true });
-  plate.addEventListener('pointerleave', () => img.classList.remove('lamp'));
+  area.addEventListener('pointerleave', () => img.classList.remove('lamp'));
 }
 
 function initForm() {
@@ -342,7 +353,8 @@ function initResize() {
 
 initCopy();
 initProgress();
-initPlate();
+lampOver($('.plate'), $('.plate-img'));
+lampOver($('#hero'), $('.shot'));
 initForm();
 initResize();
 

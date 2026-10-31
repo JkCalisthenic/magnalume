@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Magnalume · El magnesio que se ve a oscuras</title>
-<meta name="description" content="Magnalume es magnesio deportivo que brilla bajo luz ultravioleta. Para escalar, entrenar en barra y seguir cuando se va la luz.">
+<title>Magnalume · Se va la luz. La barra no.</title>
+<meta name="description" content="Magnalume es magnesio que brilla bajo luz ultravioleta. Para el freestyle de calistenia: sueltas la barra de noche y la sigues viendo.">
 <meta name="theme-color" content="#060607">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_ES">
 <meta property="og:site_name" content="Magnalume">
-<meta property="og:title" content="Magnalume · El magnesio que se ve a oscuras">
-<meta property="og:description" content="Se va la luz. Tu agarre no. Magnesio deportivo que brilla bajo luz ultravioleta.">
+<meta property="og:title" content="Magnalume · Se va la luz. La barra no.">
+<meta property="og:description" content="Magnesio que brilla bajo luz ultravioleta, para los que hacemos freestyle y a oscuras no vemos la barra.">
 <meta property="og:url" content="https://jkcalisthenic.github.io/magnalume/">
 <meta property="og:image" content="https://jkcalisthenic.github.io/magnalume/assets/og.jpg">
 <meta property="og:image:width" content="1200">
@@ -29,10 +29,10 @@
 <header class="nav">
   <a class="nav-logo" href="#hero" aria-label="Magnalume, inicio"><svg class="logo" aria-hidden="true"><use href="#logo"/></svg></a>
   <nav aria-label="Principal">
-    <a href="#bote">El bote</a>
+    <a href="#freestyle">Freestyle</a>
     <a href="#pasos">Cómo va</a>
+    <a href="#bote">El bote</a>
     <a href="#escalada">Escalada</a>
-    <a href="#calistenia">Calistenia</a>
   </nav>
   <button class="rocker" type="button" role="switch" aria-checked="true" aria-label="Lámpara ultravioleta">
     <span>Luz</span><span>UV</span>
@@ -42,17 +42,33 @@
 
 <main id="contenido">
   <section class="hero" id="hero">
+    <div class="shot lit">
+      <img class="shot-white" src="assets/clap-white.webp" width="2016" height="1152" alt="Un atleta de calistenia, de noche en el parque, da una palmada por encima de la cabeza y lo envuelve una nube de magnesio.">
+      <div class="lit-dim"></div>
+      <img class="shot-uv lit-uv" src="assets/clap-uv.webp" width="2016" height="1152" alt="" aria-hidden="true">
+    </div>
     <canvas aria-hidden="true"></canvas>
     <div class="hero-copy">
-      <h1>Se va la luz. <span>Tu agarre no.</span></h1>
-      <p>Magnalume es magnesio deportivo que brilla bajo luz ultravioleta. Enciende una lámpara UV y ves dónde agarrar.</p>
+      <h1>Se va la luz. <span>La barra no.</span></h1>
+      <p>Magnalume es magnesio que brilla bajo luz ultravioleta. Para los que hacemos freestyle y a oscuras no vemos la barra.</p>
       <div class="hero-actions">
         <a class="btn" href="#probar"><span>Quiero probarlo</span></a>
-        <p class="hint"><span data-touch="Toca la pared: tu dedo es la lámpara.">Mueve el ratón: es tu lámpara UV.</span></p>
+        <p class="hint"><span data-touch="Toca la pantalla: da una palmada.">Haz clic: da una palmada.</span></p>
       </div>
     </div>
     <aside class="label hero-label">
-      <b>Nº 001</b><span>Mano derecha</span><small>Bloque sin nombre, 22:14</small>
+      <b>Nº 001</b><span>Palmada antes de subir</span><small>Parque, 22:14</small>
+    </aside>
+  </section>
+
+  <section class="bar" id="freestyle">
+    <canvas aria-hidden="true"></canvas>
+    <div class="bar-copy">
+      <h2>Sueltas la barra. Sabes dónde vuelve.</h2>
+      <p>En freestyle no hay margen: sueltas, giras y tienes que verla. Una capa de magnesio líquido, la lámpara UV, y la barra brilla de punta a punta aunque la farola lleve meses fundida.</p>
+    </div>
+    <aside class="label bar-label">
+      <b>Nº 027</b><span>Barra de free</span><small>Magnesio líquido de punta a punta</small>
     </aside>
   </section>
 
@@ -70,10 +86,10 @@
       </div>
     </div>
     <figure class="plate">
-      <div class="plate-img">
+      <div class="plate-img lit">
         <img class="plate-white" src="assets/product-white.webp" width="1600" height="900" loading="lazy" alt="Dos botes negros de Magnalume, uno abierto, con magnesio verde pálido derramado sobre una superficie oscura.">
-        <div class="plate-dim"></div>
-        <img class="plate-uv" src="assets/product-uv.webp" width="1600" height="900" loading="lazy" alt="" aria-hidden="true">
+        <div class="lit-dim"></div>
+        <img class="plate-uv lit-uv" src="assets/product-uv.webp" width="1600" height="900" loading="lazy" alt="" aria-hidden="true">
       </div>
       <ul class="pins">
         <li style="--x:9%;--y:41%;--len:29%"><div><b>Cuerpo facetado</b><span>Negro mate, con aristas marcadas.</span></div></li>
@@ -88,9 +104,9 @@
     <div class="steps-in">
       <h2>Tres pasos y sigues entrenando.</h2>
       <ol>
+        <li><strong>Échale a la barra.</strong><span>Magnesio líquido, de punta a punta.</span></li>
         <li><strong>Manos al bote.</strong><span>Como con cualquier magnesio.</span></li>
-        <li><strong>Agarra.</strong><span>Donde toques, queda.</span></li>
-        <li><strong>Enciende la UV.</strong><span>Lo que has tocado aparece.</span></li>
+        <li><strong>Enciende la UV.</strong><span>Barra y manos, a la vista.</span></li>
       </ol>
       <p class="steps-note">Hace falta una lámpara UV. Si irá incluida, aún está por decidir.</p>
     </div>
@@ -101,21 +117,10 @@
       <canvas aria-hidden="true"></canvas>
       <div class="route-labels" aria-hidden="true"></div>
       <div class="route-copy">
-        <h2>La pared te enseña el camino.</h2>
+        <h2>¿Escalas? La pared también.</h2>
         <p>Las presas con magnesio se encienden bajo la lámpara. Sigues la línea aunque se haya hecho de noche.</p>
       </div>
     </div>
-  </section>
-
-  <section class="bar" id="calistenia">
-    <canvas aria-hidden="true"></canvas>
-    <div class="bar-copy">
-      <h2>La barra sigue ahí. Ahora la ves.</h2>
-      <p>Parque, 21:40. La farola lleva meses fundida. Da igual: la marca de tu última serie te dice dónde agarrar.</p>
-    </div>
-    <aside class="label bar-label">
-      <b>Nº 027</b><span>Barra fija</span><small>Prono, ancho de hombros</small>
-    </aside>
   </section>
 
   <section class="close" id="probar">
@@ -126,8 +131,8 @@
       <form id="lista" novalidate>
         <fieldset>
           <legend>¿Para qué lo quieres?</legend>
-          <label><input type="radio" name="deporte" value="escalada" checked><span>Escalada</span></label>
-          <label><input type="radio" name="deporte" value="calistenia"><span>Calistenia</span></label>
+          <label><input type="radio" name="deporte" value="calistenia" checked><span>Calistenia</span></label>
+          <label><input type="radio" name="deporte" value="escalada"><span>Escalada</span></label>
           <label><input type="radio" name="deporte" value="otro"><span>Otro deporte con magnesio</span></label>
         </fieldset>
         <div class="field">
@@ -144,7 +149,7 @@
 <footer class="foot">
   <svg class="logo" role="img" aria-label="Magnalume"><use href="#logo"/></svg>
   <p class="foot-tag" lang="en">Your strength leaves a mark.</p>
-  <p class="foot-note">Escenas e imágenes recreadas por ordenador. Producto en desarrollo. © 2026 Magnalume</p>
+  <p class="foot-note">Escenas e imágenes generadas por ordenador. Producto en desarrollo. © 2026 Magnalume</p>
 </footer>
 </body>
 </html>

@@ -12,11 +12,11 @@ Delegated: the owner said to decide everything. Static HTML/CSS/JS with raw WebG
 
 ## Users
 
-Athletes who use chalk (magnesium carbonate) and train where the light is poor: climbers and boulderers, calisthenics athletes at outdoor bars, and anyone in a chalk sport. First audience of this page: the founder's friend and co-founder, then early athletes. (Inferred from the brief; the owner declined the interview and told us to proceed.)
+Primary: calisthenics athletes, above all freestyle, who release the bar at night and cannot see it. The owner is one of them. Climbers and other chalk sports are welcome but secondary. First audience of this page: the owner's co-founder, then the calisthenics community.
 
 ## Product Purpose
 
-Magnalume is sports chalk that glows under ultraviolet light. With a UV lamp, a chalked surface becomes visible in the dark, so the athlete can see where to grip. The product does not exist on the market yet; this page presents the idea and collects interest.
+Magnalume is sports chalk that glows under ultraviolet light. With a UV lamp, a chalked surface becomes visible in the dark, so the athlete can see where to grip. For freestyle, the bar itself is coated in liquid chalk so it shows up end to end. The product does not exist on the market yet; this page presents the idea and collects interest.
 
 ## Positioning
 
@@ -28,7 +28,7 @@ Evening or night sessions: outdoor bars with weak street lighting, bouldering at
 
 ## Capabilities and Constraints
 
-- Confirmed: glows under UV light; aimed at sports that use chalk; green powder; black faceted jar with a screw lid and a side window showing the powder (from the product render).
+- Confirmed: glows under UV light; aimed at sports that use chalk; a liquid chalk applied to the bar; green powder; black faceted jar with a screw lid and a side window showing the powder (from the product render).
 - Undecided, must not be invented: price, launch date, formula, skin and environmental safety, lamp wavelength, whether a lamp is included, whether it keeps glowing after the lamp goes off, gym and crag acceptance.
 - No sales channel and no waitlist backend yet.
 

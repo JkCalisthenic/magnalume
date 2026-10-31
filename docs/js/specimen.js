@@ -121,7 +121,8 @@ void main() {
     } else {
       // The park at night: treeline and the dead street lamp, far beyond the lamp's reach.
       mat = .7;
-      m = 0.;
+      tooth = 1.;
+      if (side < 0. || p.y > barY || p.y < barY - .17) m = 0.;
       float crowns = pow(abs(sin(p.x * 6.5 + fbm(vec2(p.x * 2., 1.), 3) * 6.)), .55);
       float trees = .15 + crowns * .15 + fbm(vec2(p.x * 2.4, 1.), 4) * .16 + fbm(p * 26., 3) * .05;
       float lx = ax * .79;

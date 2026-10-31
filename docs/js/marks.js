@@ -89,28 +89,6 @@ export function spray(ctx, x, y, r, n, a = .75) {
   }
 }
 
-export function paintHero(ctx, w, h) {
-  const u = h / 100, wide = w > h * 1.1;
-  if (wide) {
-    hand(ctx, w * .72, h * .46, 19 * u, .18, false, 1);
-    hand(ctx, w * .94, h * .2, 14 * u, -.34, true, .86);
-    smear(ctx, w * .55, h * .13, 28 * u, .32, 11 * u, .85);
-    smear(ctx, w * .86, h * .64, 22 * u, 2.1, 9 * u, .7);
-    ticks(ctx, w * .56, h * .46, 5.5 * u, .2);
-    ticks(ctx, w * .91, h * .55, 4.5 * u, -.5);
-    ticks(ctx, w * .33, h * .1, 5 * u, .9, 2, .8);
-    spray(ctx, w * .72, h * .47, 30 * u, 90, .6);
-    spray(ctx, w * .94, h * .2, 18 * u, 50, .55);
-  } else {
-    const v = w / 100;
-    hand(ctx, w * .55, h * .27, 30 * v, .16, false, 1);
-    smear(ctx, w * .04, h * .1, 40 * v, .3, 17 * v, .8);
-    ticks(ctx, w * .12, h * .33, 9 * v, .25);
-    ticks(ctx, w * .9, h * .46, 7 * v, -.4);
-    spray(ctx, w * .55, h * .28, 52 * v, 80, .6);
-  }
-}
-
 export function paintRoute(ctx, w, h, holds, size) {
   const px = ([x, y]) => [x / size[0] * w, h - y / size[1] * h];
   const u = w / size[0];
@@ -128,26 +106,46 @@ export function paintRoute(ctx, w, h, holds, size) {
   }
 }
 
+function shade(ctx, x, y, rx, ry, rot, a) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+  ctx.scale(rx, ry);
+  const g = ctx.createRadialGradient(0, 0, .3, 0, 0, 1);
+  g.addColorStop(0, `rgba(0,0,0,${a})`);
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(0, 0, 1, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+// Liquid chalk painted along the bar: long brushed streaks, runs that hang off the underside,
+// and two worn patches where the last set rubbed it thin.
 export function paintBar(ctx, w, h, barY, barR) {
   const y = h * (1 - barY), r = barR * h, narrow = w < h;
-  for (const [cx, dir, a] of [[w * (narrow ? .29 : .375), 1, 1], [w * (narrow ? .71 : .625), -1, .9]]) {
-    for (let f = 0; f < 4; f++) {
-      const x = cx + (f - 1.5) * r * 1.42 * dir;
-      blob(ctx, x, y + (R() - .5) * r * .3, r * .6, r * 1.2, .1 * dir, .76 * a);
-      blob(ctx, x + r * .12 * dir, y + r * .4, r * .4, r * .5, 0, .6 * a);
-    }
-    blob(ctx, cx + dir * r * 3.5, y + r * .2, r * .8, r * .85, .4 * dir, .68 * a);
-    blob(ctx, cx, y - r * .5, r * 3.6, r * .45, 0, .3 * a);
-    for (let i = 0; i < 110; i++) {
-      const sx = cx + (R() - .5) * r * 14;
-      blob(ctx, sx, y + (R() - .5) * r * 1.9, r * (.08 + R() * .3), r * (.06 + R() * .2), 0, .55 * R());
-    }
+  const from = w * .06, to = w * .94;
+
+  for (let i = 0; i < (to - from) / (r * .34); i++) {
+    const sx = from + R() * (to - from);
+    blob(ctx, sx, y + (R() - .5) * r * 1.9, r * (2 + R() * 6), r * (.14 + R() * .22), (R() - .5) * .03, .4 + R() * .5);
   }
-  for (const [cx, span, a] of [[w * .5, w * .4, .22], [w * .2, w * .2, .1], [w * .8, w * .2, .1]]) {
-    for (let i = 0; i < span / (r * .22); i++) {
-      const sx = cx + (R() - .5) * span;
-      blob(ctx, sx, y + (R() - .5) * r * 1.9, r * (.08 + R() * .22), r * (.05 + R() * .1), 0, a * R());
+  for (const cx of [w * (narrow ? .29 : .375), w * (narrow ? .71 : .625)]) {
+    for (let f = 0; f < 4; f++) shade(ctx, cx + (f - 1.5) * r * 1.42, y, r * .62, r * 1.3, .1, .62);
+    shade(ctx, cx, y, r * 4.4, r * 1.3, 0, .34);
+  }
+
+  const runs = narrow ? 13 : 26;
+  for (let i = 0; i < runs; i++) {
+    const sx = from + r * 2 + R() * (to - from - r * 4);
+    const length = r * (1.5 + R() ** 2 * 7);
+    const width = r * (.12 + R() * .16);
+    for (let t = 0; t < length; t += width * .5) {
+      blob(ctx, sx + Math.sin(t * .05) * r * .08, y + r * .8 + t, width * (1 - t / length * .5), width * 1.5, 0, .85);
     }
+    blob(ctx, sx, y + r * .8 + length, width * 1.25, width * 1.8, 0, .95);
+    if (R() > .55) blob(ctx, sx, y + r * .8 + length + r * (1 + R() * 3), width * .9, width * 1.5, 0, .9);
   }
 }
 
